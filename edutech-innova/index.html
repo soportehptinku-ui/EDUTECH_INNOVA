@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>EduTech Innova — Plataforma Educativa Integral</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;0,900;1,300;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+:root {
+  --ink:    #0B1F2A;
+  --deep:   #0D2B3E;
+  --teal:   #00897B;
+  --aqua:   #26C6B0;
+  --gold:   #F5A623;
+  --light:  #F4F7F6;
+  --mist:   #E8F0EE;
+  --white:  #FFFFFF;
+  --gray:   #6B8080;
+  --border: rgba(0,137,123,0.18);
+  --radius: 14px;
+  --shadow: 0 8px 40px rgba(11,31,42,0.10);
+}
+
+body {
+  font-family: 'DM Sans', Arial, sans-serif;
+  background: var(--white);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAVEGACIÓN ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%;
+  height: 68px;
+  background: rgba(255,255,255,0.97);
+  border-bottom: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.nav-logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900; font-size: 1.35rem;
+  color: var(--deep);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+.nav-logo em { color: var(--teal); font-style: normal; }
+
+.nav-links {
+  display: flex; align-items: center; gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.875rem; font-weight: 500;
+  color: var(--gray);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--teal); }
+
+.btn-nav {
+  background: var(--teal) !important;
+  color: var(--white) !important;
+  padding: 0.55rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+.btn-nav:hover { background: #00695C !important; transform: translateY(-1px); }
+.btn-nav-locked {
+  cursor: pointer;
+  position: relative;
+}
+.btn-nav-locked .nav-tooltip {
+  display: none;
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--ink);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.75rem; font-weight: 400;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 99;
+}
+.btn-nav-locked .nav-tooltip::before {
+  content: '';
+  position: absolute; bottom: 100%; right: 18px;
+  border: 6px solid transparent;
+  border-bottom-color: var(--ink);
+}
+.btn-nav-locked.show-tip .nav-tooltip { display: block; }
+
+/* Toast visible para Ingresar */
+#ingresar-toast {
+  display: none;
+  position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+  background: var(--deep);
+  color: var(--white);
+  font-size: 0.9rem; font-weight: 500;
+  padding: 0.85rem 1.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--aqua);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  z-index: 1500;
+  white-space: nowrap;
+  animation: toast-in 0.25s ease;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+#ingresar-toast.visible { display: block; }
+
+/* Quiénes somos — frase alineada con mvv-grid */
+.mvv-quienes {
+  font-size: 0.92rem; font-weight: 400;
+  color: var(--gray); font-style: italic;
+  text-align: center;
+  margin: -1.5rem 0 2rem;
+  padding: 0.6rem 1rem;
+  border-left: 3px solid var(--aqua);
+  background: var(--mist);
+  border-radius: 0 8px 8px 0;
+  max-width: 100%;
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 4px;
+  background: none; border: none;
+}
+.nav-toggle span {
+  display: block; width: 24px; height: 2px;
+  background: var(--ink);
+  transition: all 0.3s;
+  border-radius: 2px;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--deep) 0%, #0a3d4f 55%, #0e4a50 100%);
+  display: flex; align-items: center;
+  padding: 100px 5% 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-pattern {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(0,137,123,0.18) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(38,198,176,0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 95%, rgba(245,166,35,0.08) 0%, transparent 40%);
+}
+
+/* Subtle grid */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.hero-inner {
+  position: relative; z-index: 2;
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+  width: 100%;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(38,198,176,0.15);
+  border: 1px solid rgba(38,198,176,0.35);
+  color: var(--aqua);
+  font-size: 0.78rem; font-weight: 600;
+  padding: 0.35rem 0.9rem; border-radius: 100px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase; letter-spacing: 1.2px;
+}
+
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--aqua);
+  border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.hero-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.08;
+  margin-bottom: 1.4rem;
+  letter-spacing: -1px;
+}
+
+.hero-title .accent { color: var(--aqua); }
+
+.hero-sub {
+  font-size: 1.05rem; font-weight: 300;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.75;
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+}
+
+.hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--aqua);
+  color: var(--deep);
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9px;
+  text-decoration: none;
+  border: 2px solid var(--aqua);
+  transition: all 0.2s;
+  display: inline-block;
+}
+.btn-primary:hover {
+  background: transparent;
+  color: var(--aqua);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: rgba(255,255,255,0.85);
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-weight: 500; font-size: 0.95rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9px;
+  text-decoration: none;
+  border: 2px solid rgba(255,255,255,0.25);
+  transition: all 0.2s;
+  display: inline-block;
+}
+.btn-outline:hover { border-color: rgba(255,255,255,0.6); transform: translateY(-2px); }
+
+/* Hero dashboard mockup */
+.hero-visual {
+  position: relative;
+}
+
+.mock-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 1.75rem;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.mock-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.mock-logo-sm {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900; font-size: 0.95rem;
+  color: var(--aqua);
+}
+.mock-badge {
+  background: rgba(38,198,176,0.2);
+  color: var(--aqua);
+  font-size: 0.68rem; font-weight: 600;
+  padding: 0.25rem 0.65rem; border-radius: 100px;
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+
+.mock-stats {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 0.75rem; margin-bottom: 1.25rem;
+}
+.mock-stat {
+  background: rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 0.85rem 0.75rem;
+  text-align: center;
+}
+.mock-stat-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--aqua); display: block;
+}
+.mock-stat-label {
+  font-size: 0.62rem; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  margin-top: 0.2rem; display: block;
+}
+
+.mock-modules {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.mock-module {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 9px; padding: 0.7rem 0.85rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.mock-module-icon {
+  width: 28px; height: 28px;
+  background: rgba(38,198,176,0.15);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; flex-shrink: 0;
+}
+.mock-module-name {
+  font-size: 0.72rem; font-weight: 500;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Floating pills */
+.hero-pill {
+  position: absolute;
+  background: var(--white);
+  border-radius: 100px;
+  padding: 0.5rem 1rem;
+  font-size: 0.72rem; font-weight: 600;
+  color: var(--deep);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  display: flex; align-items: center; gap: 0.4rem;
+  white-space: nowrap;
+}
+.pill-1 { top: -16px; right: 20px; }
+.pill-2 { bottom: -14px; left: 10px; }
+.pill-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.pill-dot.green { background: #22c55e; }
+.pill-dot.gold { background: var(--gold); }
+
+/* ── SECCIÓN GENÉRICA ── */
+.section { padding: 90px 5%; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+
+.section-label {
+  font-size: 0.72rem; font-weight: 600;
+  color: var(--teal);
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 0.65rem;
+}
+
+.section-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.75rem, 3vw, 2.6rem);
+  font-weight: 700; color: var(--deep);
+  line-height: 1.18; margin-bottom: 0.9rem;
+  letter-spacing: -0.5px;
+}
+
+
+.section-sub-compact { font-size: 1rem; color: var(--gray); line-height: 1.6; margin-bottom: 2rem; }
+.section-sub {
+  font-size: 1rem; color: var(--gray);
+  line-height: 1.75;
+  max-width: 100%;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+/* ── STATS BAND ── */
+.stats-band {
+  background: var(--deep);
+  padding: 50px 5%;
+}
+.stats-band-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 2rem; text-align: center;
+}
+.band-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 2.5rem; font-weight: 900;
+  color: var(--aqua); display: block; line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.band-label { font-size: 0.8rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── PILARES / DIFERENCIADORES ── */
+.bg-light { background: var(--light); }
+
+.pillars-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1.5rem;
+}
+
+.pillar-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 1.75rem;
+  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+}
+.pillar-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-4px);
+  border-color: var(--aqua);
+}
+
+.pillar-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 2.8rem; font-weight: 900;
+  color: rgba(0,137,123,0.1);
+  line-height: 1; margin-bottom: 0.75rem;
+}
+.pillar-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--deep); margin-bottom: 0.6rem;
+}
+.pillar-desc {
+  font-size: 0.875rem; color: var(--gray);
+  line-height: 1.7;
+}
+
+/* ── MISIÓN / VISIÓN / VALORES ── */
+.mvv-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; margin-bottom: 3rem;
+}
+
+.mvv-card {
+  border-radius: var(--radius);
+  padding: 2.25rem 2rem;
+  position: relative; overflow: hidden;
+}
+.mvv-card.mission {
+  background: linear-gradient(135deg, var(--deep), #0a3d4f);
+  color: var(--white);
+}
+.mvv-card.vision {
+  background: linear-gradient(135deg, #00695C, var(--teal));
+  color: var(--white);
+}
+
+.mvv-icon {
+  font-size: 2rem; margin-bottom: 1rem; display: block;
+}
+.mvv-label {
+  font-size: 0.7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 2px;
+  opacity: 0.6; margin-bottom: 0.5rem;
+}
+.mvv-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.3rem; font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.mvv-text { font-size: 0.9rem; line-height: 1.75; opacity: 0.85; }
+
+.values-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 1.25rem;
+}
+.value-card {
+  background: var(--mist);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.value-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+.value-icon {
+  font-size: 1.6rem; margin-bottom: 0.75rem; display: block;
+}
+.value-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--deep); margin-bottom: 0.4rem;
+}
+.value-desc { font-size: 0.78rem; color: var(--gray); line-height: 1.6; }
+
+/* ── PLANES ── */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.plan-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem 1.4rem;
+  display: flex; flex-direction: column;
+  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  position: relative;
+}
+.plan-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-5px);
+  border-color: var(--teal);
+}
+.plan-card.featured {
+  background: linear-gradient(160deg, var(--deep) 0%, #0a3d4f 100%);
+  border-color: var(--aqua);
+  color: var(--white);
+}
+
+.plan-popular {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--deep);
+  font-size: 0.65rem; font-weight: 700;
+  padding: 0.25rem 0.8rem; border-radius: 100px;
+  text-transform: uppercase; letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.plan-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--teal); margin-bottom: 0.2rem;
+  letter-spacing: 0.5px;
+}
+.plan-card.featured .plan-name { color: var(--aqua); }
+
+.plan-target {
+  font-size: 0.7rem; color: var(--gray);
+  margin-bottom: 1rem; line-height: 1.4;
+}
+.plan-card.featured .plan-target { color: rgba(255,255,255,0.45); }
+
+.plan-price {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 2rem; font-weight: 900;
+  color: var(--deep); line-height: 1;
+  margin-bottom: 0.15rem;
+}
+.plan-card.featured .plan-price { color: var(--white); }
+
+.plan-period {
+  font-size: 0.75rem; color: var(--gray);
+  margin-bottom: 1.25rem;
+}
+.plan-card.featured .plan-period { color: rgba(255,255,255,0.4); }
+
+.plan-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 1.25rem;
+}
+.plan-card.featured .plan-divider { background: rgba(255,255,255,0.1); }
+
+.plan-features {
+  list-style: none;
+  display: flex; flex-direction: column;
+  gap: 0.55rem; flex: 1;
+  margin-bottom: 1.5rem;
+}
+.plan-features li {
+  font-size: 0.78rem; color: var(--gray);
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  line-height: 1.45;
+}
+.plan-card.featured .plan-features li { color: rgba(255,255,255,0.7); }
+
+.plan-features li::before {
+  content: '';
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: rgba(0,137,123,0.12);
+  border: 1.5px solid var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+  background-image: url("data:image/svg+xml,%3Csvg width='8' height='6' viewBox='0 0 8 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3L3 5L7 1' stroke='%2300897B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.plan-card.featured .plan-features li::before {
+  border-color: var(--aqua);
+  background-color: rgba(38,198,176,0.12);
+  background-image: url("data:image/svg+xml,%3Csvg width='8' height='6' viewBox='0 0 8 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3L3 5L7 1' stroke='%2326C6B0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.plan-features li.highlight {
+  color: var(--deep); font-weight: 500;
+}
+.plan-card.featured .plan-features li.highlight { color: var(--white); }
+
+.plan-cta {
+  display: block; text-align: center;
+  padding: 0.7rem;
+  border-radius: 9px;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-weight: 700; font-size: 0.82rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  background: var(--mist);
+  border: 1.5px solid var(--border);
+  color: var(--deep);
+}
+.plan-card.featured .plan-cta {
+  background: var(--aqua);
+  border-color: var(--aqua);
+  color: var(--deep);
+}
+.plan-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* Plan more benefits button */
+.plan-more-btn {
+  display: block; width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.6rem;
+  border-radius: 9px;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 0.75rem; font-weight: 600;
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--teal);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.plan-more-btn:hover { background: var(--mist); border-color: var(--teal); }
+.plan-card.featured .plan-more-btn {
+  color: var(--aqua);
+  border-color: rgba(38,198,176,0.3);
+}
+.plan-card.featured .plan-more-btn:hover { background: rgba(38,198,176,0.1); }
+
+/* ── PLAN SEGURIDAD (plan independiente) ── */
+.seguridad-section-wrap {
+  margin-top: 3rem;
+}
+.seguridad-section-label {
+  font-size: 0.72rem; font-weight: 600;
+  color: var(--teal); text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 1.25rem; display: block;
+}
+.seguridad-banner {
+  background: linear-gradient(135deg, var(--deep) 0%, #0a3540 100%);
+  border: 1.5px solid rgba(38,198,176,0.3);
+  border-radius: var(--radius);
+  padding: 2.5rem 2.25rem;
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+.seguridad-banner::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(38,198,176,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.seguridad-header {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 2rem; align-items: start;
+  margin-bottom: 2rem;
+}
+.seguridad-badge-row {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 0.75rem; flex-wrap: wrap;
+}
+.seguridad-badge {
+  display: inline-block;
+  background: rgba(38,198,176,0.15);
+  border: 1px solid rgba(38,198,176,0.35);
+  color: var(--aqua);
+  font-size: 0.68rem; font-weight: 700;
+  padding: 0.25rem 0.85rem; border-radius: 100px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.seguridad-badge-independent {
+  display: inline-block;
+  background: rgba(245,166,35,0.12);
+  border: 1px solid rgba(245,166,35,0.35);
+  color: var(--gold);
+  font-size: 0.68rem; font-weight: 700;
+  padding: 0.25rem 0.85rem; border-radius: 100px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.seguridad-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.5rem; font-weight: 900;
+  color: var(--white); letter-spacing: -0.3px;
+  margin-bottom: 0.4rem;
+}
+.seguridad-sub {
+  font-size: 0.85rem; color: rgba(255,255,255,0.55);
+  line-height: 1.65;
+}
+.seguridad-price-block { text-align: right; }
+.seguridad-price {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 2.4rem; font-weight: 900;
+  color: var(--aqua); display: block; line-height: 1;
+}
+.seguridad-period { font-size: 0.8rem; color: rgba(255,255,255,0.4); }
+
+.seguridad-features {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1rem; margin-bottom: 2rem;
+}
+.seg-feat {
+  display: flex; align-items: flex-start; gap: 0.85rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  transition: border-color 0.2s;
+}
+.seg-feat:hover { border-color: rgba(38,198,176,0.3); }
+.seg-feat-icon {
+  width: 36px; height: 36px;
+  background: rgba(0,137,123,0.15);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.seg-feat-title {
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--white); margin-bottom: 0.3rem;
+}
+.seg-feat-desc { font-size: 0.75rem; color: rgba(255,255,255,0.45); line-height: 1.55; }
+
+.seguridad-cta-row {
+  display: flex; align-items: center; gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.seguridad-cta {
+  background: var(--aqua);
+  color: var(--deep);
+  border: none;
+  padding: 0.85rem 1.75rem;
+  border-radius: 9px;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-weight: 700; font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.seguridad-cta:hover { background: #1db6a0; transform: translateY(-1px); }
+.seguridad-cta-note {
+  font-size: 0.78rem; color: rgba(255,255,255,0.4);
+}
+
+/* ── MODAL REGISTRO ── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(11,31,42,0.75);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--white);
+  border-radius: 18px;
+  padding: 2.5rem 2.25rem;
+  width: 100%; max-width: 500px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+  position: relative;
+  animation: modal-in 0.2s ease;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.modal-close {
+  position: absolute; top: 1.25rem; right: 1.25rem;
+  background: none; border: none; cursor: pointer;
+  color: var(--gray); padding: 4px;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: var(--ink); }
+.modal-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--deep); margin-bottom: 0.4rem;
+  padding-right: 2rem;
+}
+.modal-sub {
+  font-size: 0.85rem; color: var(--gray);
+  margin-bottom: 1.75rem; line-height: 1.6;
+}
+.modal-form { display: flex; flex-direction: column; gap: 1rem; }
+.form-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.form-label {
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--deep);
+}
+.form-label span { color: #e53e3e; margin-left: 2px; }
+.form-input {
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 0.88rem; color: var(--ink);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(0,137,123,0.1);
+}
+.form-input.error { border-color: #e53e3e; }
+.form-submit {
+  background: var(--teal);
+  color: var(--white);
+  border: none;
+  padding: 0.85rem;
+  border-radius: 9px;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-weight: 700; font-size: 0.92rem;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  transition: background 0.2s, transform 0.15s;
+}
+.form-submit:hover { background: #00695C; transform: translateY(-1px); }
+.form-submit:disabled { background: var(--gray); cursor: not-allowed; transform: none; }
+.modal-success {
+  display: none; text-align: center; padding: 1rem 0;
+}
+.modal-success-icon {
+  width: 56px; height: 56px;
+  background: rgba(0,137,123,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+}
+.modal-success-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.25rem; font-weight: 700;
+  color: var(--deep); margin-bottom: 0.5rem;
+}
+.modal-success-text { font-size: 0.88rem; color: var(--gray); line-height: 1.6; }
+
+/* Asesor note below all plans */
+.plans-asesor-note {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--mist);
+  border-left: 3px solid var(--aqua);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem; font-weight: 400;
+  color: var(--gray);
+  font-style: italic;
+  text-align: center;
+  flex-wrap: wrap;
+}
+.plans-asesor-note svg { color: var(--teal); flex-shrink: 0; }
+
+/* Included in all plans */
+.plans-footer {
+  margin-top: 2rem;
+  background: var(--mist);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.75rem;
+  display: flex; align-items: center; gap: 2rem;
+  flex-wrap: wrap;
+}
+.plans-footer-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700; font-size: 0.88rem;
+  color: var(--teal); white-space: nowrap;
+}
+.plans-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.plan-tag {
+  font-size: 0.75rem; color: var(--gray);
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem; border-radius: 100px;
+}
+
+/* ── COMUNIDAD DE PADRES ── */
+.community-section { background: var(--deep); color: var(--white); }
+
+.community-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+}
+
+.community-text .section-title { color: var(--white); }
+.community-text .section-sub { color: rgba(255,255,255,0.55); }
+
+.community-features {
+  display: flex; flex-direction: column; gap: 1rem;
+  margin-bottom: 2rem;
+}
+.comm-feat {
+  display: flex; align-items: flex-start; gap: 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  transition: border-color 0.2s;
+}
+.comm-feat:hover { border-color: rgba(38,198,176,0.4); }
+.comm-feat-icon {
+  width: 38px; height: 38px;
+  background: rgba(38,198,176,0.12);
+  border: 1px solid rgba(38,198,176,0.2);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.comm-feat-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600; font-size: 0.95rem;
+  color: var(--white); margin-bottom: 0.25rem;
+}
+.comm-feat-desc { font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+/* Community mockup */
+.comm-mock {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  padding: 1.5rem;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.comm-mock-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.25rem; padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.comm-mock-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 0.95rem; font-weight: 700; color: var(--white);
+}
+.comm-mock-count {
+  font-size: 0.7rem; color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.06);
+  padding: 0.2rem 0.6rem; border-radius: 100px;
+}
+.comm-post {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.65rem;
+}
+.comm-post-author {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+.comm-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: var(--white);
+  flex-shrink: 0;
+}
+.comm-author-name { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+.comm-author-role { font-size: 0.65rem; color: rgba(255,255,255,0.35); }
+.comm-post-text { font-size: 0.75rem; color: rgba(255,255,255,0.55); line-height: 1.55; }
+.comm-post-actions {
+  display: flex; gap: 0.75rem; margin-top: 0.5rem;
+}
+.comm-action { font-size: 0.65rem; color: rgba(255,255,255,0.3); cursor: pointer; }
+.comm-action:hover { color: var(--aqua); }
+
+/* ── NEWSLETTER ── */
+.newsletter-section {
+  background: linear-gradient(135deg, #00695C 0%, var(--teal) 100%);
+  padding: 80px 5%;
+  text-align: center;
+}
+.newsletter-inner { max-width: 600px; margin: 0 auto; }
+.newsletter-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800; color: var(--white);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+.newsletter-sub { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin-bottom: 2rem; line-height: 1.65; }
+
+.newsletter-form {
+  display: flex; gap: 0.75rem;
+  max-width: 480px; margin: 0 auto;
+}
+.newsletter-input {
+  flex: 1;
+  padding: 0.85rem 1.1rem;
+  border-radius: 9px;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.12);
+  color: var(--white);
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.newsletter-input:focus { border-color: rgba(255,255,255,0.6); }
+.newsletter-input::placeholder { color: rgba(255,255,255,0.45); }
+.newsletter-btn {
+  background: var(--white);
+  color: var(--teal);
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 9px;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-weight: 700; font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.newsletter-btn:hover { background: var(--mist); transform: translateY(-1px); }
+
+.newsletter-perks {
+  display: flex; justify-content: center; gap: 1.5rem;
+  margin-top: 1.25rem; flex-wrap: wrap;
+}
+.newsletter-perk { font-size: 0.75rem; color: rgba(255,255,255,0.55); }
+
+/* Newsletter success message */
+#nl-success {
+  display: none;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 9px;
+  padding: 0.85rem;
+  color: var(--white);
+  font-size: 0.9rem; font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink);
+  padding: 60px 5% 30px;
+  color: rgba(255,255,255,0.5);
+}
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+}
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem; margin-bottom: 3rem;
+}
+.footer-brand-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900; font-size: 1.3rem;
+  color: var(--white); margin-bottom: 0.75rem;
+  text-decoration: none; display: block;
+}
+.footer-brand-name em { color: var(--aqua); font-style: normal; }
+.footer-brand-desc { font-size: 0.83rem; line-height: 1.7; margin-bottom: 1.25rem; }
+.footer-col-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700; font-size: 0.9rem;
+  color: var(--white); margin-bottom: 1rem;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-col ul li a {
+  font-size: 0.82rem; color: rgba(255,255,255,0.45);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-col ul li a:hover { color: var(--aqua); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.78rem;
+  flex-wrap: wrap; gap: 0.75rem;
+}
+.footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
+.footer-bottom a:hover { color: var(--aqua); }
+
+/* ── RESPONSIVE ── */
+@media screen and (max-width: 1024px) {
+  .plans-grid { grid-template-columns: repeat(3,1fr); }
+  .stats-band-inner { grid-template-columns: repeat(2,1fr); }
+  .pillars-grid { grid-template-columns: repeat(2,1fr); }
+  .values-grid { grid-template-columns: repeat(2,1fr); }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .hero-inner { gap: 2.5rem; }
+}
+
+@media screen and (max-width: 768px) {
+  nav { padding: 0 4%; }
+  .nav-links { display: none; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; position: fixed; top: 68px; left: 0; right: 0; background: var(--white); padding: 1.5rem 5%; border-bottom: 1px solid var(--border); gap: 1rem; z-index: 800; }
+  .nav-links.open { display: -webkit-box; display: -ms-flexbox; display: flex; }
+  .nav-toggle { display: -webkit-box; display: -ms-flexbox; display: flex; }
+
+  .hero { padding: 90px 4% 60px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .hero-visual { order: -1; }
+  .hero-sub { max-width: 100%; }
+  .mock-modules { grid-template-columns: 1fr 1fr; }
+
+  .section { padding: 55px 4%; }
+  .section-sub { max-width: 100%; margin-bottom: 2rem; }
+  .pillars-grid { grid-template-columns: 1fr; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .mvv-grid { grid-template-columns: 1fr; }
+  .mvv-quienes { margin: 0.5rem 0 2rem; text-align: left; }
+  .plans-asesor-note { text-align: left; justify-content: flex-start; }
+  .values-grid { grid-template-columns: repeat(2,1fr); }
+  .community-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .stats-band-inner { grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  .newsletter-form { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; }
+  .newsletter-btn { width: 100%; }
+  .plans-footer { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: start; -ms-flex-align: start; align-items: flex-start; gap: 1rem; }
+  .seguridad-header { grid-template-columns: 1fr; gap: 1rem; }
+  .seguridad-price-block { text-align: left; }
+  .seguridad-features { grid-template-columns: 1fr; }
+  .seguridad-cta-row { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: start; -ms-flex-align: start; align-items: flex-start; gap: 0.75rem; }
+  .modal-box { padding: 2rem 1.25rem; margin: 0 1rem; }
+  .footer-bottom { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; text-align: center; }
+}
+
+@media screen and (max-width: 480px) {
+  .values-grid { grid-template-columns: 1fr; }
+  .hero-ctas { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; }
+  .btn-primary, .btn-outline { text-align: center; width: 100%; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .stats-band-inner { grid-template-columns: 1fr; }
+  .plan-card { padding: 1.5rem 1.1rem; }
+  .section { padding: 45px 4%; }
+  .hero-title { font-size: 2rem; }
+  .section-title { font-size: 1.6rem; }
+  #ingresar-toast { white-space: normal; text-align: center; width: 90%; font-size: 0.82rem; }
+  .hero-pill { font-size: 0.65rem; padding: 0.4rem 0.75rem; }
+  .seguridad-banner { padding: 1.75rem 1.25rem; }
+  .seguridad-name { font-size: 1.25rem; }
+  .footer-top { gap: 1.5rem; }
+  .newsletter-input { font-size: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAVEGACIÓN ══ -->
+<nav role="navigation" aria-label="Navegación principal">
+  <a href="#inicio" class="nav-logo" aria-label="EduTech Innova inicio">EduTech<em>Innova</em></a>
+  <button class="nav-toggle" onclick="toggleNav()" aria-label="Abrir menú" aria-expanded="false" id="nav-toggle">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links" role="list">
+    <li><a href="#plataforma">Plataforma</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#planes">Planes</a></li>
+    <li><a href="#comunidad">Comunidad</a></li>
+    <li><span class="btn-nav btn-nav-locked" onclick="showLoginMsg(this)">Ingresar<span class="nav-tooltip">Accede a uno de nuestros planes</span></span></li>
+  </ul>
+</nav>
+
+<!-- Toast Ingresar -->
+<div id="ingresar-toast">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  Accede a uno de nuestros planes para ingresar
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="inicio" aria-label="Inicio">
+  <div class="hero-pattern" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-tag" aria-label="Primeros en Perú">Primeros en el mercado educativo peruano</div>
+      <h1 class="hero-title">
+        La <span class="accent">plataforma educativa</span> que tu institución necesitaba
+      </h1>
+      <p class="hero-sub">Digitalización, gestión académica, comunicación con padres, seguridad institucional y más — todo en un solo ecosistema diseñado para colegios, institutos y academias en Perú.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary" onclick="openRegModal();return false;">Regístrate</a>
+        <a href="#plataforma" class="btn-outline">Ver la plataforma</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="mock-card">
+        <div class="mock-topbar">
+          <span class="mock-logo-sm">EduTech<em style="color:var(--aqua);font-style:normal">Innova</em></span>
+          <span class="mock-badge">En vivo</span>
+        </div>
+        <div class="mock-stats">
+          <div class="mock-stat">
+            <span class="mock-stat-num mock-count" data-target="847" data-suffix="">847</span>
+            <span class="mock-stat-label">Alumnos activos</span>
+          </div>
+          <div class="mock-stat">
+            <span class="mock-stat-num mock-count" data-target="96" data-suffix="%">96%</span>
+            <span class="mock-stat-label">Asistencia hoy</span>
+          </div>
+          <div class="mock-stat">
+            <span class="mock-stat-num mock-count" data-target="124" data-suffix="">124</span>
+            <span class="mock-stat-label">Pagos este mes</span>
+          </div>
+        </div>
+        <div class="mock-modules">
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+            <span class="mock-module-name">Aula Virtual</span>
+          </div>
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <span class="mock-module-name">Reportes IA</span>
+          </div>
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+            <span class="mock-module-name">Cobranza</span>
+          </div>
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <span class="mock-module-name">Comunidad</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-pill pill-1">
+        <span class="pill-dot green"></span>
+        347 padres conectados hoy
+      </div>
+      <div class="hero-pill pill-2">
+        <span class="pill-dot gold"></span>
+        Pago recibido — S/ 850
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<div class="stats-band" aria-label="Estadísticas">
+  <div class="stats-band-inner">
+    <div class="stat-item">
+      <span class="band-num">+136</span>
+      <span class="band-label">Instituciones meta año 2</span>
+    </div>
+    <div class="stat-item">
+      <span class="band-num">100%</span>
+      <span class="band-label">Digital y sin papeleos</span>
+    </div>
+    <div class="stat-item">
+      <span class="band-num">24h</span>
+      <span class="band-label">Onboarding garantizado</span>
+    </div>
+    <div class="stat-item">
+      <span class="band-num">5</span>
+      <span class="band-label">Módulos integrados</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLATAFORMA / PILARES ══ -->
+<section class="section bg-light" id="plataforma" aria-labelledby="plataforma-title">
+  <div class="section-inner">
+    <div class="section-label">La plataforma</div>
+    <h2 class="section-title" id="plataforma-title">Un ecosistema completo para tu institución</h2>
+    <p class="section-sub">Cada módulo resuelve un problema real. Juntos, transforman la forma en que tu institución opera, se comunica y crece.</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-num">01</div>
+        <div class="pillar-title">Gestión académica y digital</div>
+        <p class="pillar-desc">Panel centralizado para directores y docentes. Control de asistencia, calificaciones, horarios y documentos digitalizados con OCR. Todo accesible desde cualquier dispositivo, en cualquier momento.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">02</div>
+        <div class="pillar-title">Aulas virtuales blindadas</div>
+        <p class="pillar-desc">Entorno de aprendizaje seguro con integración a Google Classroom, Moodle, Zoom y Teams. Portafolio digital por alumno, galería multimedia y recursos educativos protegidos con verificación QR y Blockchain.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">03</div>
+        <div class="pillar-title">Cobranza y finanzas automatizadas</div>
+        <p class="pillar-desc">Cobros digitales vía Yape, tarjeta y transferencia. Facturación electrónica SUNAT integrada, conciliación bancaria automática y recordatorios inteligentes por WhatsApp, SMS y correo para reducir morosidad.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">04</div>
+        <div class="pillar-title">Comunicación institucional con IA</div>
+        <p class="pillar-desc">Mensajería directa con padres de familia por WhatsApp automatizado. Chatbot con IA para responder preguntas frecuentes, notificaciones push personalizadas y CRM educativo para gestionar relaciones con la comunidad.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">05</div>
+        <div class="pillar-title">Almacenamiento e identidad digital</div>
+        <p class="pillar-desc">Hasta almacenamiento ilimitado con backup georreferenciado. Digitalización de alta resolución, OCR con inteligencia artificial para manuscritos, y certificados con firma digital verificable en Blockchain.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">06</div>
+        <div class="pillar-title">Analytics e inteligencia institucional</div>
+        <p class="pillar-desc">Reportes NPS, alertas predictivas con Machine Learning y dashboards integrados con Power BI. Métricas en tiempo real para que la dirección tome decisiones basadas en datos, no en suposiciones.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MISIÓN / VISIÓN / VALORES ══ -->
+<section class="section" id="nosotros" aria-labelledby="mvv-title">
+  <div class="section-inner">
+    <div class="section-label">Quiénes somos</div>
+    <h2 class="section-title" id="mvv-title">Construimos el futuro educativo de Perú</h2>
+
+    <div class="mvv-grid">
+      <div class="mvv-card mission">
+        <span class="mvv-label">Misión</span>
+        <h3 class="mvv-title">Transformar la gestión educativa en Perú</h3>
+        <p class="mvv-text">Dotamos a las instituciones educativas peruanas de tecnología accesible, inteligente y segura que les permite concentrarse en lo que realmente importa: educar. Simplificamos procesos, conectamos comunidades y generamos valor real para directores, docentes, alumnos y familias.</p>
+      </div>
+      <div class="mvv-card vision">
+        <span class="mvv-label">Visión</span>
+        <h3 class="mvv-title">Ser la plataforma educativa líder de Latinoamérica</h3>
+        <p class="mvv-text">Al 2030, queremos que cada institución educativa en Perú y la región opere de forma completamente digital, conectada y eficiente. Visualizamos un ecosistema donde la tecnología elimina las barreras administrativas y amplifica el impacto pedagógico de cada docente y cada institución.</p>
+      </div>
+    </div>
+
+    <div class="mvv-quienes">Nacimos para eliminar la brecha entre la educación que existe y la educación que las instituciones peruanas merecen.</div>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <span class="value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00897B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
+        <div class="value-name">Impacto real</div>
+        <p class="value-desc">Cada funcionalidad que construimos resuelve un problema concreto de una institución educativa real. No tecnología por tecnología.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00897B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <div class="value-name">Confianza y seguridad</div>
+        <p class="value-desc">Los datos de alumnos y familias son sagrados. Operamos con los más altos estándares de seguridad, privacidad y transparencia.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00897B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <div class="value-name">Accesibilidad</div>
+        <p class="value-desc">La tecnología de calidad no debería ser exclusiva de los colegios privados grandes. Democratizamos el acceso para toda institución educativa.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00897B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        <div class="value-name">Sostenibilidad</div>
+        <p class="value-desc">Reducimos el consumo de papel y la huella de carbono institucional. La educación del futuro cuida el planeta de las próximas generaciones.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PLANES ══ -->
+<section class="section bg-light" id="planes" aria-labelledby="planes-title">
+  <div class="section-inner">
+    <div class="section-label">Planes y precios</div>
+    <h2 class="section-title" id="planes-title">Transparencia total, sin letras pequeñas</h2>
+    <p class="section-sub">Elige el plan que se adapta al tamaño y necesidades de tu institución. Cambia cuando quieras, sin penalizaciones.</p>
+
+    <div class="plans-grid">
+
+      <!-- BASIC -->
+      <div class="plan-card">
+        <div class="plan-name">BASIC</div>
+        <div class="plan-price">S/ 299</div>
+        <div class="plan-period">/mes, sin contrato</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>500 páginas B&amp;N A4 / mes</li>
+          <li>OCR básico incluido</li>
+          <li>App móvil básica</li>
+          <li>Alerta 80% cuota</li>
+          <li>Cobranza digital</li>
+          <li>Factura SUNAT API</li>
+          <li>Soporte WhatsApp 48h</li>
+          <li>Onboarding digital 48h</li>
+        </ul>
+        <a href="#" class="plan-cta" onclick="openRegModal();return false;">Regístrate</a>
+      </div>
+
+      <!-- START -->
+      <div class="plan-card">
+        <div class="plan-name">START</div>
+        <div class="plan-price">S/ 699</div>
+        <div class="plan-period">/mes, sin contrato</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>1,000 páginas B&amp;N A4 / mes</li>
+          <li>OCR básico incluido</li>
+          <li>App móvil completa</li>
+          <li>Integración Meet / Zoom</li>
+          <li>Google Classroom</li>
+          <li>CRM 10 contactos</li>
+          <li>NPS mensual automatizado</li>
+          <li>Cobranza SMS + Email</li>
+        </ul>
+        <a href="#" class="plan-cta" onclick="openRegModal();return false;">Regístrate</a>
+      </div>
+
+      <!-- GOLD — FEATURED -->
+      <div class="plan-card featured">
+        <div class="plan-popular">Más popular</div>
+        <div class="plan-name">GOLD</div>
+        <div class="plan-price">S/ 899</div>
+        <div class="plan-period">/mes, sin contrato</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>2,000 páginas B&amp;N A4 / mes</li>
+          <li>100 páginas COLOR A4 / mes</li>
+          <li>OCR básico incluido</li>
+          <li>Blockchain certificados</li>
+          <li>Multi-sede hasta 3</li>
+          <li>API REST básica</li>
+          <li>CRM completo</li>
+          <li>Dashboard analytics</li>
+        </ul>
+        <a href="#" class="plan-cta" onclick="openRegModal();return false;">Regístrate</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan-card">
+        <div class="plan-name">PRO</div>
+        <div class="plan-price">S/ 1,299</div>
+        <div class="plan-period">/mes + S/ 500 setup</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>5,000 páginas B&amp;N A4 / mes</li>
+          <li>500 páginas COLOR A4 / mes</li>
+          <li>OCR básico incluido</li>
+          <li>IA pedagógica avanzada</li>
+          <li>Power BI integrado</li>
+          <li>ERP vía API</li>
+          <li>Alertas ML retención</li>
+          <li>Soporte 24/7 WhatsApp</li>
+        </ul>
+        <a href="#" class="plan-cta" onclick="openRegModal();return false;">Regístrate</a>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="plan-card">
+        <div class="plan-name">ENTERPRISE</div>
+        <div class="plan-price">S/ 1,499</div>
+        <div class="plan-period">/mes + S/ 2,500 setup</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>10,000 páginas B&amp;N A4 / mes</li>
+          <li>1,000 páginas COLOR A4 / mes</li>
+          <li>OCR avanzado incluido</li>
+          <li>IA 100% personalizada</li>
+          <li>Sedes ilimitadas</li>
+          <li>White-label dominio propio</li>
+          <li>Integración con MINEDU</li>
+          <li>Account Manager dedicado</li>
+        </ul>
+        <a href="#" class="plan-cta" onclick="openRegModal();return false;">Regístrate</a>
+      </div>
+
+    </div><!-- /plans-grid -->
+
+    <!-- Nota asesor debajo de todos los planes -->
+    <div class="plans-asesor-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Un asesor te contactará para explicarte todos los beneficios de tu plan
+    </div>
+
+    <!-- PLAN SEGURIDAD -->
+    <div class="seguridad-section-wrap" id="seguridad">
+      <span class="seguridad-section-label">Plan complementario</span>
+      <div class="seguridad-banner">
+        <div class="seguridad-header">
+          <div>
+            <div class="seguridad-badge-row">
+              <span class="seguridad-badge">Complemento disponible desde Plan GOLD</span>
+            </div>
+            <div class="seguridad-name">PLAN SEGURIDAD</div>
+            <p class="seguridad-sub">Protección integral para tu institución, docentes y alumnos. Disponible de forma independiente o como complemento al contratar el Plan GOLD en adelante.</p>
+          </div>
+          <div class="seguridad-price-block">
+            <span class="seguridad-price">S/ 299</span>
+            <span class="seguridad-period">/mes</span>
+          </div>
+        </div>
+        <div class="seguridad-features">
+          <div class="seg-feat">
+            <div class="seg-feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div>
+              <div class="seg-feat-title">Aulas virtuales blindadas</div>
+              <p class="seg-feat-desc">Entorno de aprendizaje protegido con control de acceso, verificación de identidad y monitoreo en tiempo real.</p>
+            </div>
+          </div>
+          <div class="seg-feat">
+            <div class="seg-feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div>
+              <div class="seg-feat-title">Botón de pánico — alerta PNP</div>
+              <p class="seg-feat-desc">Activación inmediata de protocolo de emergencia con notificación directa a la Policía Nacional del Perú y a los padres de familia.</p>
+            </div>
+          </div>
+          <div class="seg-feat">
+            <div class="seg-feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div>
+              <div class="seg-feat-title">Protocolo ante extorsión</div>
+              <p class="seg-feat-desc">Guía digital de actuación, registro de incidencias con trazabilidad legal y canal confidencial para denuncias internas.</p>
+            </div>
+          </div>
+          <div class="seg-feat">
+            <div class="seg-feat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div>
+              <div class="seg-feat-title">Seguridad para toda la comunidad</div>
+              <p class="seg-feat-desc">Control de acceso QR para visitantes, alertas WhatsApp ante incidentes y simulacros digitales de evacuación programables.</p>
+            </div>
+          </div>
+        </div>
+        <div class="seguridad-cta-row">
+          <button class="seguridad-cta" onclick="openRegModal()">Regístrate para coordinar una reunión</button>
+          <span class="seguridad-cta-note">Uno de nuestros asesores te contactará para conocer más detalles de este plan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="plans-footer">
+      <span class="plans-footer-title">Todos los planes incluyen:</span>
+      <div class="plans-tags">
+        <span class="plan-tag">Plataforma web y app móvil</span>
+        <span class="plan-tag">Alertas de cuota al 80%</span>
+        <span class="plan-tag">Notificaciones push</span>
+        <span class="plan-tag">Pagos digitales Yape y tarjeta</span>
+        <span class="plan-tag">Facturación SUNAT</span>
+        <span class="plan-tag">Cuota flexible impresión y digitalización</span>
+        <span class="plan-tag">Onboarding digital 48h</span>
+        <span class="plan-tag">Renovación automática</span>
+        <span class="plan-tag">Sin costos ocultos</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ COMUNIDAD DE PADRES ══ -->
+<section class="section community-section" id="comunidad" aria-labelledby="comunidad-title">
+  <div class="section-inner">
+    <div class="community-grid">
+      <div class="community-text">
+        <div class="section-label" style="color: var(--aqua);">Comunidad de padres</div>
+        <h2 class="section-title" id="comunidad-title">La familia, parte activa de la educacion</h2>
+        <p class="section-sub">Cada colegio tiene su propia comunidad cerrada y privada. Los padres se mantienen informados, participan y conectan con la institucion y entre ellos.</p>
+
+        <div class="community-features">
+          <div class="comm-feat">
+            <div class="comm-feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div>
+              <div class="comm-feat-title">Grupos privados por sección y grado</div>
+              <p class="comm-feat-desc">Cada aula tiene su propio espacio cerrado. La institución modera y controla quiénes participan. Privado, seguro, sin redes sociales de por medio.</p>
+            </div>
+          </div>
+          <div class="comm-feat">
+            <div class="comm-feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+            <div>
+              <div class="comm-feat-title">Comunicados oficiales con confirmación de lectura</div>
+              <p class="comm-feat-desc">El colegio publica avisos, circulares y eventos. El sistema registra quiénes los leyeron y envía recordatorios automáticos a quienes no lo hicieron.</p>
+            </div>
+          </div>
+          <div class="comm-feat">
+            <div class="comm-feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div>
+              <div class="comm-feat-title">Agenda escolar compartida con los padres</div>
+              <p class="comm-feat-desc">Exámenes, entrega de notas, eventos y reuniones sincronizados directamente en el móvil de cada padre de familia, con alertas anticipadas.</p>
+            </div>
+          </div>
+          <div class="comm-feat">
+            <div class="comm-feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <div>
+              <div class="comm-feat-title">Seguimiento académico en tiempo real</div>
+              <p class="comm-feat-desc">Los padres acceden al progreso, asistencia y calificaciones de sus hijos desde la app. Transparencia total sin necesidad de llamar al colegio.</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="#" class="btn-primary" style="display:inline-block;" onclick="openRegModal();return false;">Activar comunidad para mi colegio</a>
+      </div>
+
+      <!-- Community mockup -->
+      <div class="comm-mock" aria-hidden="true">
+        <div class="comm-mock-header">
+          <span class="comm-mock-title">Comunidad — Colegio San Martin</span>
+          <span class="comm-mock-count">128 padres activos</span>
+        </div>
+
+        <div class="comm-post">
+          <div class="comm-post-author">
+            <div class="comm-avatar" style="background:#00695C">MT</div>
+            <div>
+              <div class="comm-author-name">Direccion del Colegio</div>
+              <div class="comm-author-role">Comunicado oficial — hace 2 horas</div>
+            </div>
+          </div>
+          <p class="comm-post-text">Recordamos que el jueves 20 se realizara la reunion de padres de familia del 3er grado a las 6:00 pm. Confirmen su asistencia aqui.</p>
+          <div class="comm-post-actions">
+            <span class="comm-action">Confirmar asistencia (42)</span>
+            <span class="comm-action">Comentar</span>
+          </div>
+        </div>
+
+        <div class="comm-post">
+          <div class="comm-post-author">
+            <div class="comm-avatar" style="background:#F5A623; color:#0B1F2A">LP</div>
+            <div>
+              <div class="comm-author-name">Lucia Perez</div>
+              <div class="comm-author-role">Madre de familia — 3A</div>
+            </div>
+          </div>
+          <p class="comm-post-text">Alguien sabe si el horario de matematicas cambia esta semana? Vi una notificacion pero no pude leerla.</p>
+          <div class="comm-post-actions">
+            <span class="comm-action">Responder (3)</span>
+            <span class="comm-action">Me sirve</span>
+          </div>
+        </div>
+
+        <div class="comm-post">
+          <div class="comm-post-author">
+            <div class="comm-avatar" style="background:#26C6B0; color:#0B1F2A">JR</div>
+            <div>
+              <div class="comm-author-name">Prof. Jose Rios</div>
+              <div class="comm-author-role">Tutor de 3er Grado</div>
+            </div>
+          </div>
+          <p class="comm-post-text">Las notas del primer trimestre ya estan disponibles en la plataforma. Ingresen con su cuenta para verlas.</p>
+          <div class="comm-post-actions">
+            <span class="comm-action">Ver notas</span>
+            <span class="comm-action">Me gusta (18)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWSLETTER ══ -->
+<section class="newsletter-section" aria-labelledby="newsletter-title">
+  <div class="newsletter-inner">
+    <h2 class="newsletter-title" id="newsletter-title">Mantente al tanto de la educacion que viene</h2>
+    <p class="newsletter-sub">Tendencias educativas, actualizaciones de la plataforma, casos de exito de colegios peruanos y recursos gratuitos — directo a tu correo, una vez por semana.</p>
+    <div class="newsletter-form" role="form" aria-label="Suscripcion al newsletter">
+      <input
+        type="email"
+        id="nl-email"
+        class="newsletter-input"
+        placeholder="tu@institucion.edu.pe"
+        aria-label="Correo electronico para el newsletter"
+        autocomplete="email"
+      >
+      <button type="button" class="newsletter-btn" onclick="subscribeNewsletter()">
+        Suscribirme
+      </button>
+    </div>
+    <div id="nl-success" role="status" aria-live="polite">
+      Listo. Te confirmaremos por correo en breve. Bienvenido a la comunidad EduTech Innova.
+    </div>
+    <div class="newsletter-perks">
+      <span class="newsletter-perk">1 correo por semana</span>
+      <span class="newsletter-perk">&#183;</span>
+      <span class="newsletter-perk">Cancela cuando quieras</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MODAL REGISTRO ══ -->
+<div class="modal-overlay" id="reg-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="closeRegModalOutside(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeRegModal()" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <!-- Formulario -->
+    <div id="modal-form-wrap">
+      <h2 class="modal-title" id="modal-title">Regístrate para conocer más</h2>
+      <p class="modal-sub">Uno de nuestros asesores se pondrá en contacto contigo para presentarte todos los beneficios y acordar una reunión sin compromiso.</p>
+      <div class="modal-form" id="modal-form">
+        <div class="form-field">
+          <label class="form-label" for="reg-colegio">Nombre del colegio / institución <span>*</span></label>
+          <input type="text" id="reg-colegio" class="form-input" placeholder="Ej. I.E. San Martín de Porres" autocomplete="organization">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-ruc">RUC <span>*</span></label>
+          <input type="text" id="reg-ruc" class="form-input" placeholder="20XXXXXXXXX" maxlength="11" inputmode="numeric">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-distrito">Distrito <span>*</span></label>
+          <input type="text" id="reg-distrito" class="form-input" placeholder="Ej. Miraflores, Lima" autocomplete="address-level2">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-celular">Celular <span>*</span></label>
+          <input type="tel" id="reg-celular" class="form-input" placeholder="9XXXXXXXX" maxlength="9" inputmode="tel">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="reg-correo">Correo electrónico <span>*</span></label>
+          <input type="email" id="reg-correo" class="form-input" placeholder="director@micolegio.edu.pe" autocomplete="email">
+        </div>
+        <button type="button" class="form-submit" id="reg-submit" onclick="submitReg()">Solicitar reunión</button>
+      </div>
+    </div>
+
+    <!-- Éxito -->
+    <div class="modal-success" id="modal-success">
+      <div class="modal-success-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00897B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="modal-success-title">Registro recibido</div>
+      <p class="modal-success-text">Nos pondremos en contacto contigo en las próximas 24 horas para coordinar una reunión y mostrarte todo lo que EduTech Innova puede hacer por tu institución.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#inicio" class="footer-brand-name">EduTech<em>Innova</em></a>
+        <p class="footer-brand-desc">La plataforma educativa integral que transforma la gestión de instituciones educativas en Perú. Digital, segura y diseñada para todos.</p>
+        <p style="font-size:0.8rem;">Lima, Perú</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Plataforma</div>
+        <ul>
+          <li><a href="#plataforma">Módulos</a></li>
+          <li><a href="#planes">Planes y precios</a></li>
+          <li><a href="#seguridad">Plan Seguridad</a></li>
+          <li><a href="#comunidad">Comunidad de padres</a></li>
+          <li><a href="#" onclick="scrollToIngresar();return false;">Ingresar</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Compañía</div>
+        <ul>
+          <li><a href="#nosotros">Misión y Visión</a></li>
+          <li><a href="#nosotros">Nuestros valores</a></li>
+          <li><a href="blog.html">Blog educativo</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#c7a4a8a9b3a6a4b3a887a2a3b2b3a2a4afaea9a9a8b1a6e9b7a2">Trabaja con nosotros</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Legal</div>
+        <ul>
+          <li><a href="terminos.html">Términos de uso</a></li>
+          <li><a href="privacidad.html">Política de privacidad</a></li>
+          <li><a href="datos.html">Protección de datos</a></li>
+          <li><a href="sla.html">SLA y garantías</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 EduTech Innova S.A.C. Todos los derechos reservados.</span>
+      <span>Hecho en Lima, Perú para la educación latinoamericana.</span>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Counter animation for hero mock stats
+document.addEventListener('DOMContentLoaded', function() {
+  function animateCount(el) {
+    var target = parseInt(el.getAttribute('data-target'));
+    var suffix = el.getAttribute('data-suffix') || '';
+    var duration = 1200;
+    var start = 0;
+    var startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Use IntersectionObserver so animation fires when hero is visible
+  var counters = document.querySelectorAll('.mock-count');
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    counters.forEach(function(c) { obs.observe(c); });
+  } else {
+    counters.forEach(function(c) { animateCount(c); });
+  }
+
+  // Live payment pulse every 5s
+  setInterval(function() {
+    var pagos = document.querySelector('[data-target="124"]');
+    if (pagos && Math.random() > 0.5) {
+      var v = parseInt(pagos.textContent) || 124;
+      pagos.textContent = v + 1;
+      pagos.setAttribute('data-target', v + 1);
+      pagos.style.color = '#22c55e';
+      setTimeout(function(){ pagos.style.color = ''; }, 900);
+    }
+  }, 5000);
+});
+
+
+function showIngresarToast() {
+  var t = document.getElementById('ingresar-toast');
+  t.classList.add('visible');
+  setTimeout(function(){ t.classList.remove('visible'); }, 3000);
+}
+function scrollToIngresar() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(showIngresarToast, 700);
+}
+// Nav Ingresar tooltip
+function showLoginMsg(el) {
+  showIngresarToast();
+}
+
+// Modal de registro
+function openRegModal() {
+  document.getElementById('reg-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Reset form
+  document.getElementById('modal-form-wrap').style.display = 'block';
+  document.getElementById('modal-success').style.display = 'none';
+  document.querySelectorAll('.form-input').forEach(function(i){ i.value=''; i.classList.remove('error'); });
+  document.getElementById('reg-submit').disabled = false;
+  document.getElementById('reg-submit').textContent = 'Solicitar reunión';
+  setTimeout(function(){ document.getElementById('reg-colegio').focus(); }, 100);
+}
+function closeRegModal() {
+  document.getElementById('reg-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeRegModalOutside(e) {
+  if (e.target === document.getElementById('reg-modal')) closeRegModal();
+}
+function submitReg() {
+  var fields = [
+    { id: 'reg-colegio', label: 'nombre del colegio' },
+    { id: 'reg-ruc', label: 'RUC', minLen: 11 },
+    { id: 'reg-distrito', label: 'distrito' },
+    { id: 'reg-celular', label: 'celular', minLen: 9 },
+    { id: 'reg-correo', label: 'correo', email: true }
+  ];
+  var valid = true;
+  fields.forEach(function(f) {
+    var el = document.getElementById(f.id);
+    el.classList.remove('error');
+    var val = el.value.trim();
+    if (!val) { el.classList.add('error'); valid = false; return; }
+    if (f.minLen && val.replace(/\D/g,'').length < f.minLen) { el.classList.add('error'); valid = false; return; }
+    if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { el.classList.add('error'); valid = false; return; }
+  });
+  if (!valid) {
+    document.querySelector('.form-input.error').focus();
+    return;
+  }
+  // Success
+  document.getElementById('reg-submit').disabled = true;
+  document.getElementById('reg-submit').textContent = 'Enviando...';
+  setTimeout(function() {
+    document.getElementById('modal-form-wrap').style.display = 'none';
+    document.getElementById('modal-success').style.display = 'block';
+  }, 600);
+}
+
+// ESC para cerrar modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeRegModal();
+});
+
+// Nav toggle para mobile
+function toggleNav() {
+  var links = document.getElementById('nav-links');
+  var toggle = document.getElementById('nav-toggle');
+  var isOpen = links.classList.contains('open');
+  links.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', !isOpen);
+}
+
+// Cerrar nav al hacer click en un link (mobile)
+document.querySelectorAll('.nav-links a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    document.getElementById('nav-links').classList.remove('open');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', 'false');
+  });
+});
+
+// Newsletter
+function subscribeNewsletter() {
+  var email = document.getElementById('nl-email').value.trim();
+  var success = document.getElementById('nl-success');
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email || !emailRegex.test(email)) {
+    document.getElementById('nl-email').focus();
+    document.getElementById('nl-email').style.borderColor = 'rgba(255,100,100,0.6)';
+    setTimeout(function() {
+      document.getElementById('nl-email').style.borderColor = 'rgba(255,255,255,0.2)';
+    }, 2000);
+    return;
+  }
+
+  // Aqui iria el POST a tu backend / Supabase / Mailchimp
+  success.style.display = 'block';
+  document.getElementById('nl-email').value = '';
+  document.getElementById('nl-email').disabled = true;
+  document.querySelector('.newsletter-btn').disabled = true;
+  document.querySelector('.newsletter-btn').textContent = 'Suscrito';
+}
+
+// Enter en newsletter input
+document.getElementById('nl-email').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') subscribeNewsletter();
+});
+
+// Smooth scroll para navegadores sin soporte nativo
+docu
