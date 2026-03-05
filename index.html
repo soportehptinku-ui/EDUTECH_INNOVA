@@ -1814,10 +1814,6 @@ function showIngresarToast() {
   t.classList.add('visible');
   setTimeout(function(){ t.classList.remove('visible'); }, 3000);
 }
-function scrollToIngresar() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  setTimeout(showIngresarToast, 700);
-}
 // Nav Ingresar tooltip
 function showLoginMsg(el) {
   showIngresarToast();
