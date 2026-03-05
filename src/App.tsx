@@ -20,6 +20,10 @@ const CrmPage          = lazy(() => import('@pages/crm/CrmPage'));
 const PlanesPage       = lazy(() => import('@pages/planes/PlanesPage'));
 const NotFoundPage     = lazy(() => import('@pages/NotFoundPage'));
 
+// --- ESTAS SON LAS QUE FALTABAN ---
+const BlogPage         = lazy(() => import('@pages/dashboard/blog'));
+const PrivacidadPage   = lazy(() => import('@pages/dashboard/privacidad'));
+
 // Redirige al login si no hay sesion activa
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { session, loading } = useAuth();
@@ -37,6 +41,8 @@ export default function App() {
         <Route element={<PublicLayout />}>
           <Route path="/login"    element={<LoginPage />} />
           <Route path="/registro" element={<RegisterPage />} />
+          <Route path="/blog"     element={<BlogPage />} />
+          <Route path="/privacidad" element={<PrivacidadPage />} />
           {/* Verificacion de certificados: accesible sin sesion */}
           <Route path="/verify/:id" element={<VerifyPage />} />
         </Route>
