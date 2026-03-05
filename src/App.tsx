@@ -37,17 +37,15 @@ export default function App() {
     <Suspense fallback={<LoadingScreen />}>
       <Routes>
 
-        {/* Rutas publicas */}
+       {/* Rutas publicas */}
         <Route element={<PublicLayout />}>
-          <Route path="/login"    element={<LoginPage />} />
-          <Route path="/registro" element={<RegisterPage />} />
-          <Route path="/blog"     element={<BlogPage />} />
-          <Route path="/privacidad" element={<PrivacidadPage />} />
-          {/* Verificacion de certificados: accesible sin sesion */}
+          <Route path="/login"      element={<LoginPage />} />
+          <Route path="/registro"   element={<RegisterPage />} />
+          <Route path="/terminos"   element={<TérminosPage />} /> {/* Aquí irían los Términos de uso */}
           <Route path="/verify/:id" element={<VerifyPage />} />
         </Route>
 
-        {/* Rutas protegidas — requieren sesion */}
+       {/* Rutas protegidas — requieren sesion (Colegio registrado) */}
         <Route
           element={
             <ProtectedRoute>
@@ -55,8 +53,17 @@ export default function App() {
             </ProtectedRoute>
           }
         >
+          {/* Dashboard Principal */}
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard"    element={<DashboardPage />} />
+          
+          {/* SECCIÓN LEGAL PRIVADA */}
+          <Route path="/privacidad"   element={<PrivacidadPage />} />
+          <Route path="/datos"        element={<DatosPage />} />
+          <Route path="/sla"          element={<SlaPage />} />
+          
+          {/* Otras características del Colegio */}
+          <Route path="/blog"         element={<BlogPage />} />
           <Route path="/cuota"        element={<CuotaPage />} />
           <Route path="/cobranza"     element={<CobranzaPage />} />
           <Route path="/certificados" element={<CertificadosPage />} />
