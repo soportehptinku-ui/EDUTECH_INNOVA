@@ -8,13 +8,15 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/dashboard',    label: 'Panel principal', icon: 'grid' },
+  { to: '/dashboard',    label: 'Panel principal',   icon: 'grid' },
   { to: '/cuota',        label: 'Cuota e impresion', icon: 'printer' },
   { to: '/cobranza',     label: 'Cobranza',          icon: 'credit-card' },
   { to: '/certificados', label: 'Certificados',      icon: 'award' },
   { to: '/asistente',    label: 'Asistente IA',      icon: 'message-square' },
   { to: '/crm',          label: 'CRM y NPS',         icon: 'users' },
   { to: '/planes',       label: 'Mi plan',           icon: 'package' },
+  { to: '/blog',         label: 'Blog Educativo',    icon: 'book-open' },
+  { to: '/privacidad',   label: 'Privacidad',        icon: 'shield' },
 ];
 
 export function Sidebar() {
@@ -35,7 +37,7 @@ export function Sidebar() {
           >
             <span className="sidebar__link-icon" aria-hidden="true" data-icon={item.icon} />
             <span className="sidebar__link-label">{item.label}</span>
-          </NavLink>
+         </NavLink>
         ))}
       </nav>
     </aside>
