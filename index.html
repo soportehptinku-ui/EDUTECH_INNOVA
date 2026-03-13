@@ -1163,75 +1163,87 @@ footer {
 
  <body>
 
-  <nav role="navigation" aria-label="Navegación principal">
-    <a href="#inicio" class="nav-logo">EduTech<em>Innova</em></a>
+ <nav role="navigation" aria-label="Navegación principal">
+  <a href="#inicio" class="nav-logo">EduTech<em>Innova</em></a>
+  
+  <button class="nav-toggle" onclick="toggleNav()" id="nav-toggle">
+    <span></span><span></span><span></span>
+  </button>
+
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#plataforma">Plataforma</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#planes">Planes</a></li>
+    <li><a href="#comunidad">Comunidad</a></li>
+    <li><a href="login.html" class="btn-nav">Ingresar</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="inicio">
+  <div class="hero-pattern"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
     
-    <button class="nav-toggle" onclick="toggleNav()" id="nav-toggle">
-      <span></span><span></span><span></span>
-    </button>
-
-    <ul class="nav-links" id="nav-links">
-      <li><a href="#plataforma">Plataforma</a></li>
-      <li><a href="#nosotros">Nosotros</a></li>
-      <li><a href="#planes">Planes</a></li>
-      <li><a href="#comunidad">Comunidad</a></li>
-      <li><a href="login.html" class="btn-nav">Ingresar</a></li>
-    </ul>
-  </nav>
-
-  <section class="hero" id="inicio">
-    <div class="hero-pattern"></div>
-    <div class="hero-grid"></div>
-    <div class="hero-inner">
-      
-      <div class="hero-text">
-        <div class="hero-tag">Primeros en el mercado educativo peruano</div>
-        <h1 class="hero-title">
-          La <span class="accent">plataforma educativa</span> que tu institución necesitaba
-        </h1>
-        <p class="hero-sub">Digitalización, gestión académica, comunicación con padres y seguridad institucional en un solo ecosistema diseñado para colegios, institutos y academias en Perú.</p>
-        <div class="hero-ctas">
-          <a href="#" class="btn-primary" onclick="openRegModal();return false;">Regístrate</a>
-          <a href="#plataforma" class="btn-outline">Ver la plataforma</a>
-        </div>
+    <div class="hero-text">
+      <div class="hero-tag">Primeros en el mercado educativo peruano</div>
+      <h1 class="hero-title">
+        La <span class="accent">plataforma educativa</span> que tu institución necesitaba
+      </h1>
+      <p class="hero-sub">Digitalización, gestión académica, comunicación con padres y seguridad institucional en un solo ecosistema diseñado para colegios, institutos y academias en Perú.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary" onclick="openRegModal();return false;">Regístrate</a>
+        <a href="#plataforma" class="btn-outline">Ver la plataforma</a>
       </div>
-
-      <div class="hero-visual">
-        <div class="mock-card">
-          <div class="mock-topbar">
-            <span class="mock-logo-sm">EduTech<em style="color:var(--aqua);font-style:normal">Innova</em></span>
-            <span class="mock-badge">En vivo</span>
-          </div>
-
-          <div class="mock-stats">
-            <div class="mock-stat">
-              <span class="mock-stat-num">847</span>
-              <span class="mock-stat-label">Alumnos activos</span>
-            </div>
-            <div class="mock-stat">
-              <span class="mock-stat-num">96%</span>
-              <span class="mock-stat-label">Asistencia hoy</span>
-            </div>
-            <div class="mock-stat">
-              <span class="mock-stat-num">124</span>
-              <span class="mock-stat-label">Pagos este mes</span>
-            </div>
-          </div>
-
-          <div class="mock-modules">
-            <div class="mock-module"><span class="mock-module-name">Aula Virtual</span></div>
-            <div class="mock-module"><span class="mock-module-name">Reportes IA</span></div>
-            <div class="mock-module"><span class="mock-module-name">Cobranza</span></div>
-            <div class="mock-module"><span class="mock-module-name">Comunidad</span></div>
-          </div>
-        </div>
-
-        <div class="hero-pill pill-1"><span class="pill-dot green"></span> 347 padres conectados</div>
-        <div class="hero-pill pill-2"><span class="pill-dot gold"></span> Pago recibido — S/ 850</div>
-      </div>
-
     </div>
-  </section>
+
+    <div class="hero-visual">
+      <div class="mock-card">
+        <div class="mock-topbar">
+          <span class="mock-logo-sm">EduTech<em style="color:var(--aqua);font-style:normal">Innova</em></span>
+          <span class="mock-badge">En vivo</span>
+        </div>
+
+        <div class="mock-stats">
+          <div class="mock-stat">
+            <span class="mock-stat-num mock-count" data-target="847">0</span>
+            <span class="mock-stat-label">Alumnos activos</span>
+          </div>
+          <div class="mock-stat">
+            <span class="mock-stat-num mock-count" data-target="96" data-suffix="%">0%</span>
+            <span class="mock-stat-label">Asistencia hoy</span>
+          </div>
+          <div class="mock-stat">
+            <span class="mock-stat-num mock-count" data-target="124">0</span>
+            <span class="mock-stat-label">Pagos este mes</span>
+          </div>
+        </div>
+
+        <div class="mock-modules">
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+            <span class="mock-module-name">Aula Virtual</span>
+          </div>
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <span class="mock-module-name">Reportes IA</span>
+          </div>
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+            <span class="mock-module-name">Cobranza</span>
+          </div>
+          <div class="mock-module">
+            <div class="mock-module-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26C6B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <span class="mock-module-name">Comunidad</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-pill pill-1"><span class="pill-dot green"></span> 347 padres conectados hoy</div>
+      <div class="hero-pill pill-2"><span class="pill-dot gold"></span> Pago recibido — S/ 850</div>
+    </div>
+
+  </div>
+</section>
 <!-- ══ STATS ══ -->
 <div class="stats-band" aria-label="Estadísticas">
   <div class="stats-band-inner">
