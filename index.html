@@ -1921,18 +1921,23 @@ function subscribeNewsletter() {
       if (e.key === 'Enter') subscribeNewsletter();
     });
 
-    // Smooth scroll para navegadores sin soporte nativo
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+   // Smooth scroll corregido
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        
+        // Solo actúa si el href tiene más de un carácter (ej. #contacto)
+        if (href !== "#" && href.length > 1) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(href);
             if (target) {
                 target.scrollIntoView({
                     behavior: 'smooth'
                 });
             }
-        });
+        }
     });
+});
   </script>
   <script src="https://cdn.jsdelivr.net/gh/manucaralmo/GlowCookies@3.0.1/src/glowCookies.min.js"></script>
 <script>
