@@ -8,7 +8,7 @@ import { LoadingScreen } from '@components/ui/LoadingScreen';
 // Carga diferida por modulo para reducir el bundle inicial
 import { lazy, Suspense } from 'react';
 
-const LoginPage        = lazy(() => import('@pages/auth/LoginPage'));
+const LoginPage = lazy(() => import('./pages/Auth/LoginPage'));
 const RegisterPage     = lazy(() => import('@pages/auth/RegisterPage'));
 const DashboardPage    = lazy(() => import('@pages/dashboard/DashboardPage'));
 const CuotaPage        = lazy(() => import('@pages/cuota/CuotaPage'));
