@@ -8,21 +8,25 @@ import { LoadingScreen } from '@components/ui/LoadingScreen';
 // Carga diferida por modulo para reducir el bundle inicial
 import { lazy, Suspense } from 'react';
 
-const LoginPage = lazy(() => import('./pages/Auth/LoginPage'));
+const LoginPage        = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage     = lazy(() => import('@pages/auth/RegisterPage'));
-const DashboardPage    = lazy(() => import('@pages/dashboard/DashboardPage'));
-const CuotaPage        = lazy(() => import('@pages/cuota/CuotaPage'));
-const CobranzaPage     = lazy(() => import('@pages/cobranza/CobranzaPage'));
-const CertificadosPage = lazy(() => import('@pages/certificados/CertificadosPage'));
-const VerifyPage       = lazy(() => import('@pages/verify/VerifyPage'));
-const AsistentePage    = lazy(() => import('@pages/asistente/AsistentePage'));
-const CrmPage          = lazy(() => import('@pages/crm/CrmPage'));
-const PlanesPage       = lazy(() => import('@pages/planes/PlanesPage'));
+const BlogPage         = lazy(() => import('./pages/dashboard/blog'));
+const PrivacidadPage   = lazy(() => import('./pages/dashboard/privacidad'));
+const DatosPage        = lazy(() => import('./pages/dashboard/datos'));
+const SlaPage          = lazy(() => import('./pages/dashboard/sla'));
+const NotFoundPage     = lazy(() => import('./pages/NotFoundPage'));
+const CuotaPage        = lazy(() => import('./pages/cuota/CuotaPage'));
+const CobranzaPage     = lazy(() => import('./pages/cobranza/CobranzaPage'));
+const CertificadosPage = lazy(() => import('./pages/certificados/CertificadosPage'));
+const VerifyPage       = lazy(() => import('./pages/verify/VerifyPage'));
+const AsistentePage    = lazy(() => import('./pagess/asistente/AsistentePage'));
+const CrmPage          = lazy(() => import('./pages/crm/CrmPage'));
+const PlanesPage       = lazy(() => import('./pages/planes/PlanesPage'));
 const NotFoundPage     = lazy(() => import('@pages/NotFoundPage'));
 
 // --- ESTAS SON LAS QUE FALTABAN ---
-const BlogPage         = lazy(() => import('@pages/dashboard/blog'));
-const PrivacidadPage   = lazy(() => import('@pages/dashboard/privacidad'));
+const BlogPage         = lazy(() => import('./pages/dashboard/blog'));
+const PrivacidadPage   = lazy(() => import('./pages/dashboard/privacidad'));
 
 // Redirige al login si no hay sesion activa
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
