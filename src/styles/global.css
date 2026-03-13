@@ -125,12 +125,11 @@ a:hover { text-decoration: underline; }
   white-space: nowrap; /* Impide que el texto se parta en dos */
 }
 
-/* Botones con forma real */
 .btn-nav {
-  padding: 8px 18px;
-  border-radius: 8px;
-  font-size: 0.85rem !important;
-  display: inline-block;
+  text-decoration: none;
+  font-weight: 600; /* Peso normal de tu diseño */
+  text-shadow: none !important; /* Esto quita cualquier sombra de la letra */
+  box-shadow: none !important; /* Esto quita sombras del borde */
 }
 
 .btn-primary {
