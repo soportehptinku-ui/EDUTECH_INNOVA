@@ -232,3 +232,66 @@ a:hover { text-decoration: underline; }
   .app-layout__main { margin-left: 0; }
   .metrics-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── Ajuste para Navegación Principal (Evita distorsión) ─── */
+
+/* Contenedor de la lista de enlaces */
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 1.5rem; /* Espacio entre botones */
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo base para los enlaces del menú */
+.nav-links li a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-dark);
+  white-space: nowrap; /* Evita que el texto se rompa en dos líneas */
+  transition: color 0.2s;
+}
+
+.nav-links li a:hover {
+  color: var(--color-teal);
+  text-decoration: none;
+}
+
+/* Botones especiales dentro del Nav */
+.btn-nav {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+/* El botón de "Regístrate" resaltado */
+.btn-primary {
+  background-color: var(--color-teal);
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-teal-dk);
+  transform: translateY(-1px);
+}
+
+/* REGLAS RESPONSIVE PARA EL MENÚ */
+@media (max-width: 1100px) {
+  .nav-links {
+    gap: 0.8rem; /* Reduce espacio en pantallas medianas para que no choque con el logo */
+  }
+  .nav-links li a {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* En celulares, ocultamos los links para que no desborden la pantalla */
+  /* Aquí es donde normalmente iría tu menú de "tres rayitas" */
+  .nav-links {
+    display: none; 
+  }
+}
