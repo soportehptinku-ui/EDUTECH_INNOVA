@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduTech Innova — Panel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #028090;
+    --mint: #00C9B1;
+    --dark: #0D2B30;
+    --dark2: #07191C;
+    --card: #0F2D32;
+    --white: #FFFFFF;
+    --border: rgba(0,201,177,0.12);
+    --warning: #FFB830;
+    --error: #FF4D4D;
+    --accent: #FF6B35;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark2);
+    color: var(--white);
+    display: flex; min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 250px; flex-shrink: 0;
+    background: var(--dark);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 1.5rem 0;
+    position: fixed; top: 0; bottom: 0; left: 0;
+  }
+
+  .sidebar-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.2rem;
+    color: var(--mint); padding: 0 1.5rem;
+    margin-bottom: 0.25rem; display: block; text-decoration: none;
+  }
+  .sidebar-logo span { color: var(--white); }
+
+  .admin-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,107,53,0.15);
+    border: 1px solid rgba(255,107,53,0.25);
+    color: var(--accent);
+    font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 0.2rem 0.6rem; border-radius: 4px;
+    margin: 0 1.5rem 2rem;
+    width: fit-content;
+  }
+
+  .sidebar-section {
+    font-size: 0.65rem; font-weight: 600;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    padding: 0 1.5rem; margin-bottom: 0.5rem;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.875rem; font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    border-left: 3px solid transparent;
+    transition: all 0.2s; cursor: pointer;
+    background: none; border-top: none; border-right: none; border-bottom: none;
+    width: 100%; text-align: left;
+  }
+
+  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .nav-item.active {
+    color: var(--mint); background: rgba(0,201,177,0.08);
+    border-left-color: var(--mint);
+  }
+
+  .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+  .sidebar-spacer { flex: 1; }
+
+  .sidebar-user {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-logout {
+    display: block; width: 100%; margin-top: 0.5rem;
+    padding: 0.5rem; background: rgba(255,77,77,0.1);
+    border: 1px solid rgba(255,77,77,0.2);
+    color: #FF4D4D; font-size: 0.75rem;
+    border-radius: 6px; cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .btn-logout:hover { background: rgba(255,77,77,0.2); }
+
+  /* MAIN */
+  .main { margin-left: 250px; flex: 1; display: flex; flex-direction: column; }
+
+  .topbar {
+    background: var(--dark); border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 10;
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 1rem; }
+  .topbar-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.72rem; font-weight: 600;
+    color: var(--mint);
+  }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--mint);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  .content { padding: 2rem; }
+
+  /* STATS */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 1rem; margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.2rem 1.25rem;
+    position: relative; overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .stat-card.green::before { background: var(--mint); }
+  .stat-card.orange::before { background: var(--warning); }
+  .stat-card.red::before { background: var(--error); }
+  .stat-card.blue::before { background: var(--teal); }
+  .stat-card.white::before { background: rgba(255,255,255,0.3); }
+
+  .stat-label {
+    font-size: 0.7rem; font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+  .stat-value {
+    font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800;
+  }
+  .stat-value.green { color: var(--mint); }
+  .stat-value.orange { color: var(--warning); }
+  .stat-value.red { color: var(--error); }
+  .stat-value.white { color: rgba(255,255,255,0.9); }
+
+  /* FILTERS */
+  .filters-bar {
+    display: flex; gap: 0.75rem; align-items: center;
+    margin-bottom: 1.25rem; flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.45rem 1rem; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent; color: rgba(255,255,255,0.5);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--mint); color: var(--mint); }
+  .filter-btn.active { background: var(--mint); color: var(--dark); border-color: var(--mint); }
+
+  .search-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 0.5rem 1rem;
+    color: var(--white); font-size: 0.85rem;
+    outline: none; width: 220px;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--mint); }
+  .search-input::placeholder { color: rgba(255,255,255,0.25); }
+
+  /* TABLE */
+  .table-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+  }
+
+  .table-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .table-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.68rem; font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase; letter-spacing: 1px;
+    text-align: left; border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+
+  td {
+    padding: 0.9rem 1.25rem; font-size: 0.85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.25rem 0.7rem; border-radius: 100px;
+    font-size: 0.7rem; font-weight: 600;
+  }
+  .status-badge::before { content:''; width:5px; height:5px; border-radius:50%; }
+
+  .s-entregado { background:rgba(0,201,177,0.1); color:var(--mint); }
+  .s-entregado::before { background:var(--mint); }
+  .s-proceso { background:rgba(255,184,48,0.1); color:var(--warning); }
+  .s-proceso::before { background:var(--warning); }
+  .s-pendiente { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.4); }
+  .s-pendiente::before { background:rgba(255,255,255,0.25); }
+  .s-cancelado { background:rgba(255,77,77,0.1); color:var(--error); }
+  .s-cancelado::before { background:var(--error); }
+
+  .action-btn {
+    padding: 0.3rem 0.7rem; border-radius: 6px;
+    font-size: 0.72rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; border: 1px solid;
+    margin-right: 0.3rem;
+  }
+
+  .btn-confirm {
+    background: rgba(0,201,177,0.1); border-color: rgba(0,201,177,0.3);
+    color: var(--mint);
+  }
+  .btn-confirm:hover { background: rgba(0,201,177,0.2); }
+
+  .btn-deliver {
+    background: rgba(0,201,177,0.15); border-color: var(--mint);
+    color: var(--mint);
+  }
+  .btn-deliver:hover { background: var(--mint); color: var(--dark); }
+
+  .btn-cancel {
+    background: rgba(255,77,77,0.08); border-color: rgba(255,77,77,0.2);
+    color: var(--error);
+  }
+  .btn-cancel:hover { background: rgba(255,77,77,0.2); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    z-index: 100; display: none; align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: var(--dark); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem; width: 100%; max-width: 500px;
+    margin: 1rem; animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .modal-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:1.25rem; }
+  .modal-close {
+    position:absolute; top:1rem; right:1rem;
+    background:none; border:none; color:rgba(255,255,255,0.3);
+    font-size:1.2rem; cursor:pointer;
+  }
+
+  .detail-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.06);
+    font-size:0.875rem;
+  }
+  .detail-row:last-of-type { border-bottom:none; }
+  .detail-key { color:rgba(255,255,255,0.4); }
+  .detail-val { font-weight:500; }
+
+  /* INSTITUCIONES TAB */
+  .inst-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:1rem;
+  }
+
+  .inst-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:12px; padding:1.25rem;
+    transition:all 0.2s;
+  }
+  .inst-card:hover { border-color:rgba(0,201,177,0.3); transform:translateY(-2px); }
+
+  .inst-name { font-family:'Syne',sans-serif; font-weight:700; margin-bottom:0.25rem; }
+  .inst-plan {
+    display:inline-block;
+    background:rgba(0,201,177,0.1); color:var(--mint);
+    font-size:0.7rem; font-weight:700; text-transform:uppercase;
+    padding:0.15rem 0.5rem; border-radius:4px; margin-bottom:0.75rem;
+  }
+  .inst-meta { font-size:0.8rem; color:rgba(255,255,255,0.4); line-height:1.7; }
+
+  /* TOAST */
+  .alert-toast {
+    position:fixed; bottom:2rem; right:2rem;
+    background:var(--dark); border:1px solid var(--mint);
+    color:var(--mint); padding:1rem 1.5rem;
+    border-radius:10px; font-size:0.875rem;
+    transform:translateY(100px); opacity:0;
+    transition:all 0.4s; z-index:999;
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+  }
+  .alert-toast.show { transform:translateY(0); opacity:1; }
+
+  @media(max-width:1200px) { .stats-row { grid-template-columns:repeat(3,1fr); } }
+  @media(max-width:768px) { .sidebar{display:none;} .main{margin-left:0;} }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="index.html" class="sidebar-logo">EduTech<span>Innova</span></a>
+  <div class="admin-badge">🔑 Admin</div>
+
+  <div class="sidebar-section">Gestión</div>
+  <button class="nav-item active" onclick="switchAdminView('pedidos')">
+    <span class="nav-icon">📦</span> Todos los pedidos
+  </button>
+  <button class="nav-item" onclick="switchAdminView('instituciones')">
+    <span class="nav-icon">🏫</span> Instituciones
+  </button>
+  <button class="nav-item" onclick="switchAdminView('metricas')">
+    <span class="nav-icon">📊</span> Métricas
+  </button>
+
+  <div class="sidebar-spacer"></div>
+
+  <div class="sidebar-user">
+    <div style="font-size:0.8rem;font-weight:600;">Administrador</div>
+    <div style="font-size:0.7rem;color:var(--accent);margin-top:0.2rem;">EduTech Innova</div>
+    <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="admin-topbar-title">Todos los pedidos</div>
+      <div class="live-badge"><div class="live-dot"></div> En vivo</div>
+    </div>
+    <div style="font-size:0.8rem;color:rgba(255,255,255,0.3);">
+      Hoy: <span id="today-date"></span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card white">
+        <div class="stat-label">Total pedidos</div>
+        <div class="stat-value white" id="admin-total">8</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Pendientes</div>
+        <div class="stat-value orange" id="admin-pendientes">3</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">En proceso</div>
+        <div class="stat-value orange" id="admin-proceso">2</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Entregados</div>
+        <div class="stat-value green" id="admin-entregados">3</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Instituciones</div>
+        <div class="stat-value" style="color:var(--teal);" id="admin-instituciones">4</div>
+      </div>
+    </div>
+
+    <!-- ====== PEDIDOS ====== -->
+    <div id="admin-view-pedidos">
+      <div class="filters-bar">
+        <button class="filter-btn active" onclick="filterOrders('todos', this)">Todos</button>
+        <button class="filter-btn" onclick="filterOrders('pendiente', this)">Pendientes</button>
+        <button class="filter-btn" onclick="filterOrders('proceso', this)">En proceso</button>
+        <button class="filter-btn" onclick="filterOrders('entregado', this)">Entregados</button>
+        <input class="search-input" type="text" placeholder="🔍 Buscar institución..." oninput="searchOrders(this.value)">
+      </div>
+
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Pedidos de impresión</div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.3);" id="order-count">8 pedidos</div>
+        </div>
+        <div id="admin-orders-container"></div>
+      </div>
+    </div>
+
+    <!-- ====== INSTITUCIONES ====== -->
+    <div id="admin-view-instituciones" style="display:none;">
+      <div class="inst-grid" id="inst-grid-container"></div>
+    </div>
+
+    <!-- ====== MÉTRICAS ====== -->
+    <div id="admin-view-metricas" style="display:none;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Ingresos este mes</div>
+          <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--mint);">S/ 8,608</div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:0.4rem;">Proyección M1-3</div>
+          <div style="margin-top:1.5rem;display:flex;gap:1.5rem;">
+            <div>
+              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">MRR</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);">S/ 5,990</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Instituciones</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;">10</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">EBITDA</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--error);">-S/27,573</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Proyección 24 meses</div>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            ${[
+              ['M1-3', 'S/ 8,608', '10 inst.', '-'],
+              ['M4-6', 'S/ 28,832', '28 inst.', '-'],
+              ['M7-9', 'S/ 63,052', '46 inst.', '+'],
+              ['M10-12', 'S/ 98,532', '64 inst.', '+'],
+              ['M22-24', 'S/ 245,014', '136 inst.', '+'],
+            ].map(([p, ing, inst, sign]) => `
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${p}</span>
+                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">${ing}</span>
+                <span style="font-size:0.78rem;color:rgba(255,255,255,0.4);">${inst}</span>
+                <span style="font-size:0.75rem;font-weight:700;color:${sign==='+'?'var(--mint)':'var(--error)'};">${sign === '+' ? '✓ EBITDA+' : 'Inversión'}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Unit Economics</div>
+          ${[
+            ['CAC', 'S/ 1,880'],
+            ['LTV Neto', 'S/ 39,034'],
+            ['LTV/CAC Ratio', '20.8x'],
+            ['Payback', '1.04 meses'],
+            ['Churn mensual', '3%'],
+            ['Vida promedio', '33.3 meses'],
+          ].map(([k,v]) => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${k}</span>
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">${v}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODAL DETALLE PEDIDO -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" style="position:relative;">
+    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('show')">✕</button>
+    <div class="modal-title" id="modal-title">Detalle del pedido</div>
+    <div id="modal-content"></div>
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem;" id="modal-actions"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="alert-toast" id="toast"></div>
+
+<script>
+// =============================================
+// CONFIGURACIÓN SUPABASE
+// =============================================
+const SUPABASE_URL = 'TU_SUPABASE_URL_AQUI';
+const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY_AQUI';
+
+// Auth check
+const token = localStorage.getItem('edutech_token');
+if (!token) window.location.href = 'login.html';
+
+// Date
+document.getElementById('today-date').textContent = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'long', year:'numeric' });
+
+// =============================================
+// DEMO DATA (reemplazar con Supabase queries)
+// =============================================
+let allOrders = [
+  { id: '#001', institucion: 'Colegio San Martín', responsable: 'María Torres', plan: 'GOLD', archivo: 'Examen_Mat_3A.pdf', tipo: 'B&N', copias: 35, paginas: 105, estado: 'entregado', fecha: '12 Ene', instrucciones: 'A doble cara' },
+  { id: '#002', institucion: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', plan: 'PRO', archivo: 'Fichas_Lectura_Sem4.pdf', tipo: 'Color', copias: 10, paginas: 80, estado: 'proceso', fecha: '14 Ene', instrucciones: '' },
+  { id: '#003', institucion: 'Colegio San Martín', responsable: 'María Torres', plan: 'GOLD', archivo: 'Cuestionario_Ciencias.pdf', tipo: 'B&N', copias: 30, paginas: 60, estado: 'pendiente', fecha: '15 Ene', instrucciones: 'Urgente' },
+  { id: '#004', institucion: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', plan: 'START', archivo: 'Practica_Fisica.pdf', tipo: 'B&N', copias: 25, paginas: 50, estado: 'pendiente', fecha: '15 Ene', instrucciones: '' },
+  { id: '#005', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', plan: 'BASIC', archivo: 'Manualidad_Mes_Enero.pdf', tipo: 'Color', copias: 20, paginas: 20, estado: 'proceso', fecha: '16 Ene', instrucciones: 'Papel grueso' },
+  { id: '#006', institucion: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', plan: 'PRO', archivo: 'Examen_Semestral_Admin.pdf', tipo: 'B&N', copias: 60, paginas: 180, estado: 'entregado', fecha: '10 Ene', instrucciones: '' },
+  { id: '#007', institucion: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', plan: 'START', archivo: 'Simulacro_Premedica.pdf', tipo: 'B&N', copias: 40, paginas: 120, estado: 'pendiente', fecha: '16 Ene', instrucciones: '' },
+  { id: '#008', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', plan: 'BASIC', archivo: 'Circulares_Padres.pdf', tipo: 'B&N', copias: 50, paginas: 50, estado: 'entregado', fecha: '11 Ene', instrucciones: '' },
+];
+
+const instituciones = [
+  { nombre: 'Colegio San Martín', responsable: 'María Torres', cargo: 'Directora', plan: 'GOLD', pedidos: 2, telefono: '+51 999 111 222' },
+  { nombre: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', cargo: 'Administrador', plan: 'PRO', pedidos: 2, telefono: '+51 999 333 444' },
+  { nombre: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', cargo: 'Director', plan: 'START', pedidos: 2, telefono: '+51 999 555 666' },
+  { nombre: 'Nido Los Girasoles', responsable: 'Ana Lima', cargo: 'Directora', plan: 'BASIC', pedidos: 2, telefono: '+51 999 777 888' },
+];
+
+// =============================================
+// NAVEGACIÓN
+// =============================================
+function switchAdminView(view) {
+  ['pedidos','instituciones','metricas'].forEach(v => {
+    document.getElementById(`admin-view-${v}`).style.display = v === view ? 'block' : 'none';
+  });
+  document.querySelectorAll('.nav-item').forEach((btn, i) => {
+    const labels = ['pedidos','instituciones','metricas'];
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase().includes(labels[i]?.split(' ')[0]));
+  });
+  const titles = { pedidos:'Todos los pedidos', instituciones:'Instituciones', metricas:'Métricas del negocio' };
+  document.getElementById('admin-topbar-title').textContent = titles[view];
+  if (view === 'instituciones') renderInstituciones();
+}
+
+// =============================================
+// RENDER ORDERS TABLE
+// =============================================
+let currentFilter = 'todos';
+let currentSearch = '';
+
+function renderOrdersTable(orders) {
+  const container = document.getElementById('admin-orders-container');
+  document.getElementById('order-count').textContent = `${orders.length} pedido${orders.length !== 1 ? 's' : ''}`;
+
+  if (!orders.length) {
+    container.innerHTML = `<div style="text-align:center;padding:3rem;color:rgba(255,255,255,0.3);">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">📭</div>
+      <p>No hay pedidos con este filtro</p>
+    </div>`;
+    return;
+  }
+
+  const statusMap = {
+    entregado: ['s-entregado', '✓ Entregado'],
+    proceso: ['s-proceso', '⏳ En proceso'],
+    pendiente: ['s-pendiente', '○ Pendiente'],
+    cancelado: ['s-cancelado', '✕ Cancelado'],
+  };
+
+  container.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Institución</th>
+          <th>Plan</th>
+          <th>Archivo</th>
+          <th>Tipo</th>
+          <th>Copias</th>
+          <th>Pág.</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${orders.map(o => {
+          const [cls, label] = statusMap[o.estado] || ['s-pendiente', o.estado];
+          return `<tr>
+            <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);cursor:pointer;" onclick="showOrderDetail('${o.id}')">${o.id}</td>
+            <td>
+              <div style="font-weight:500;">${o.institucion}</div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">${o.responsable}</div>
+            </td>
+            <td><span style="background:rgba(0,201,177,0.1);color:var(--mint);font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;">${o.plan}</span></td>
+            <td style="font-size:0.8rem;">📄 ${o.archivo}</td>
+            <td>${o.tipo}</td>
+            <td>${o.copias}</td>
+            <td>${o.paginas}</td>
+            <td><span class="status-badge ${cls}">${label}</span></td>
+            <td style="color:rgba(255,255,255,0.4);font-size:0.8rem;">${o.fecha}</td>
+            <td>
+              ${o.estado === 'pendiente' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${o.id}','proceso')">▶ Iniciar</button>` : ''}
+              ${o.estado === 'proceso' ? `<button class="action-btn btn-deliver" onclick="updateStatus('${o.id}','entregado')">✓ Entregar</button>` : ''}
+              ${o.estado !== 'entregado' && o.estado !== 'cancelado' ? `<button class="action-btn btn-cancel" onclick="updateStatus('${o.id}','cancelado')">✕</button>` : ''}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function filterOrders(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function searchOrders(query) {
+  currentSearch = query.toLowerCase();
+  applyFilters();
+}
+
+function applyFilters() {
+  let filtered = allOrders;
+  if (currentFilter !== 'todos') filtered = filtered.filter(o => o.estado === currentFilter);
+  if (currentSearch) filtered = filtered.filter(o =>
+    o.institucion.toLowerCase().includes(currentSearch) ||
+    o.id.toLowerCase().includes(currentSearch) ||
+    o.archivo.toLowerCase().includes(currentSearch)
+  );
+  renderOrdersTable(filtered);
+}
+
+function updateStatus(id, newStatus) {
+  const order = allOrders.find(o => o.id === id);
+  if (!order) return;
+
+  // Aquí iría el update a Supabase:
+  // await fetch(`${SUPABASE_URL}/rest/v1/pedidos?id=eq.${id}`, { method:'PATCH', body: JSON.stringify({estado: newStatus}) ... })
+
+  order.estado = newStatus;
+  applyFilters();
+
+  const labels = { proceso: 'En proceso', entregado: 'Entregado', cancelado: 'Cancelado' };
+  showToast(`✅ Pedido ${id} → ${labels[newStatus]}`);
+
+  // Update stats
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('admin-total').textContent = allOrders.length;
+  document.getElementById('admin-pendientes').textContent = allOrders.filter(o=>o.estado==='pendiente').length;
+  document.getElementById('admin-proceso').textContent = allOrders.filter(o=>o.estado==='proceso').length;
+  document.getElementById('admin-entregados').textContent = allOrders.filter(o=>o.estado==='entregado').length;
+}
+
+// =============================================
+// MODAL DETALLE
+// =============================================
+function showOrderDetail(id) {
+  const o = allOrders.find(x => x.id === id);
+  if (!o) return;
+
+  document.getElementById('modal-title').textContent = `Pedido ${o.id}`;
+
+  const rows = [
+    ['Institución', o.institucion],
+    ['Responsable', o.responsable],
+    ['Plan', o.plan],
+    ['Archivo', `📄 ${o.archivo}`],
+    ['Tipo de impresión', o.tipo],
+    ['Cantidad de copias', o.copias],
+    ['Páginas totales', o.paginas],
+    ['Estado', o.estado.charAt(0).toUpperCase() + o.estado.slice(1)],
+    ['Fecha de pedido', o.fecha],
+    ['Instrucciones', o.instrucciones || '(ninguna)'],
+  ];
+
+  document.getElementById('modal-content').innerHTML = rows.map(([k,v]) => `
+    <div class="detail-row">
+      <span class="detail-key">${k}</span>
+      <span class="detail-val">${v}</span>
+    </div>
+  `).join('');
+
+  const actions = document.getElementById('modal-actions');
+  actions.innerHTML = '';
+
+  if (o.estado === 'pendiente') {
+    actions.innerHTML += `<button class="btn btn-mint" style="flex:1;padding:0.65rem;" onclick="updateStatus('${o.id}','proceso');closeModal()">▶ Iniciar proceso</button>`;
+  }
+  if (o.estado === 'proceso') {
+    actions.innerHTML += `<button class="btn btn-mint" style="flex:1;padding:0.65rem;" onclick="updateStatus('${o.id}','entregado');closeModal()">✓ Marcar entregado</button>`;
+  }
+
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('show');
+  }
+}
+
+// =============================================
+// INSTITUCIONES
+// =============================================
+function renderInstituciones() {
+  document.getElementById('inst-grid-container').innerHTML = instituciones.map(inst => `
+    <div class="inst-card">
+      <div class="inst-name">${inst.nombre}</div>
+      <div class="inst-plan">${inst.plan}</div>
+      <div class="inst-meta">
+        👤 ${inst.responsable} · ${inst.cargo}<br>
+        📱 ${inst.telefono}<br>
+        📦 ${inst.pedidos} pedidos realizados
+      </div>
+      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+        <a href="https://wa.me/${inst.telefono.replace(/\D/g,'')}" style="flex:1;text-align:center;padding:0.4rem;background:rgba(0,201,177,0.1);border:1px solid rgba(0,201,177,0.2);color:var(--mint);border-radius:6px;font-size:0.75rem;text-decoration:none;font-weight:600;">WhatsApp</a>
+        <button onclick="showToast('Ver pedidos de: ${inst.nombre}')" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border-radius:6px;font-size:0.75rem;cursor:pointer;">Ver pedidos</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =============================================
+// UTILS
+// =============================================
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = isError ? '#FF4D4D' : 'var(--mint)';
+  t.style.color = isError ? '#FF4D4D' : 'var(--mint)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+function logout() {
+  localStorage.removeItem('edutech_token');
+  localStorage.removeItem('edutech_user');
+  window.location.href = 'login.html';
+}
+
+// =============================================
+// INIT
+// =============================================
+renderOrdersTable(allOrders);
+updateStats();
+</script>
+</body>
+</html>
