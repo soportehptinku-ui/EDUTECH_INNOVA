@@ -1947,6 +1947,71 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         policyLink: '/privacidad'
     });
 </script>
+<script>
+  async function submitReg() {
+    const btn = document.getElementById('reg-submit');
+    
+    // 1. Capturamos los datos de los inputs del modal
+    const nombre = document.getElementById('reg-colegio').value;
+    const ruc = document.getElementById('reg-ruc').value;
+    const distrito = document.getElementById('reg-distrito').value;
+    const celular = document.getElementById('reg-celular').value;
+    const correo = document.getElementById('reg-correo').value;
+
+    // Validación básica para no enviar campos vacíos
+    if (!nombre || !ruc || !correo) {
+      alert("Por favor, completa los campos obligatorios (*)");
+      return;
+    }
+
+    // Cambiamos el estado del botón
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
+
+    try {
+      // 2. Enviamos la información a la tabla 'Perfiles'
+      // IMPORTANTE: Los nombres de la izquierda deben ser IGUALES a tus columnas en Supabase
+      const { error } = await supabase
+        .from('Perfiles')
+        .insert([
+          { 
+            nombre_colegio: nombre, 
+            ruc: ruc, 
+            distrito: distrito, 
+            celular: celular, 
+            correo_electronico: correo 
+          }
+        ]);
+
+      if (error) throw error;
+
+      // 3. Si todo sale bien, mostramos el mensaje de éxito del modal
+      document.getElementById('modal-form-wrap').style.display = 'none';
+      document.getElementById('modal-success').style.display = 'block';
+
+    } catch (err) {
+      console.error("Error al guardar en Supabase:", err);
+      alert("Hubo un error al registrar: " + err.message);
+    } finally {
+      btn.innerText = "Solicitar reunión";
+      btn.disabled = false;
+    }
+  }
+
+  // Corrección del error de Smooth Scroll que bloqueaba la página
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      if (href !== "#" && href.length > 1) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+</script>
 </body>
 </html>
     
