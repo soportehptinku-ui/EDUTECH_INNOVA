@@ -1949,66 +1949,59 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 </script>
 <script>
+  // PASO A: Aquí pegas tus datos de Supabase
+  const SUPABASE_URL = 'https://wazdaohczeqrrpfzjgcs.supabase.co'; 
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhemRhb2hjemVxcnJwZnpqZ2NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NzYzMzEsImV4cCI6MjA4ODI1MjMzMX0.MsieEfEnBNCl7koLxAeLsLbaIVuhIFAipd2076acGzU';
+  
+  // Esto crea la conexión que antes faltaba
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
   async function submitReg() {
     const btn = document.getElementById('reg-submit');
     
-    // 1. Capturamos los datos de los inputs del modal
-    const nombre = document.getElementById('reg-colegio').value;
-    const ruc = document.getElementById('reg-ruc').value;
-    const distrito = document.getElementById('reg-distrito').value;
-    const celular = document.getElementById('reg-celular').value;
-    const correo = document.getElementById('reg-correo').value;
+    // Capturamos los datos
+    const datos = { 
+      nombre_colegio: document.getElementById('reg-colegio').value, 
+      ruc: document.getElementById('reg-ruc').value, 
+      distrito: document.getElementById('reg-distrito').value, 
+      celular: document.getElementById('reg-celular').value, 
+      correo_electronico: document.getElementById('reg-correo').value 
+    };
 
-    // Validación básica para no enviar campos vacíos
-    if (!nombre || !ruc || !correo) {
+    if (!datos.nombre_colegio || !datos.ruc || !datos.correo_electronico) {
       alert("Por favor, completa los campos obligatorios (*)");
       return;
     }
 
-    // Cambiamos el estado del botón
     btn.innerText = "Enviando...";
     btn.disabled = true;
 
     try {
-      // 2. Enviamos la información a la tabla 'Perfiles'
-      // IMPORTANTE: Los nombres de la izquierda deben ser IGUALES a tus columnas en Supabase
-      const { error } = await supabase
-        .from('Perfiles')
-        .insert([
-          { 
-            nombre_colegio: nombre, 
-            ruc: ruc, 
-            distrito: distrito, 
-            celular: celular, 
-            correo_electronico: correo 
-          }
-        ]);
-
+      // Usamos 'supabaseClient' que acabamos de definir arriba
+      const { error } = await supabaseClient.from('Perfiles').insert([datos]);
+      
       if (error) throw error;
 
-      // 3. Si todo sale bien, mostramos el mensaje de éxito del modal
       document.getElementById('modal-form-wrap').style.display = 'none';
       document.getElementById('modal-success').style.display = 'block';
 
     } catch (err) {
-      console.error("Error al guardar en Supabase:", err);
-      alert("Hubo un error al registrar: " + err.message);
+      console.error("Error:", err);
+      alert("Error al registrar: " + err.message);
     } finally {
       btn.innerText = "Solicitar reunión";
       btn.disabled = false;
     }
   }
 
-  // Corrección del error de Smooth Scroll que bloqueaba la página
+  // Esto es para que los links no fallen
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       const href = this.getAttribute('href');
       if (href !== "#" && href.length > 1) {
         e.preventDefault();
         const target = document.querySelector(href);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
       }
     });
   });
