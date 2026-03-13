@@ -93,37 +93,63 @@ a:hover { text-decoration: underline; }
 .sidebar__link:hover { background: rgba(255,255,255,0.06); color: white; text-decoration: none; }
 .sidebar__link--active { color: var(--color-mint); border-left-color: var(--color-mint); background: rgba(0,201,177,0.08); }
 
-/* ─── Header ─────────────────────────────────────────────────── */
-.header {
-  height: var(--header-height);
+/* ─── Header Corregido (Anti-distorsión) ────────────────── */
+.header-main {
+  display: flex;
+  justify-content: space-between; /* Logo a la izquierda, Menú a la derecha */
+  align-items: center;
+  padding: 1rem 5%;
   background: white;
-  border-bottom: 1px solid var(--color-teal-lt);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nav-links {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding: 0 24px;
-  gap: 16px;
-  box-shadow: var(--shadow-sm);
+  gap: 1.5rem; /* Espacio real entre enlaces */
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-.header__alerta {
-  font-size: 0.8125rem;
-  color: var(--color-error);
-  background: #FFF3F3;
-  padding: 4px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-error);
-  flex: 1;
-}
-.header__cuota-badge {
-  font-size: 0.8125rem;
+
+.nav-links li a {
+  text-decoration: none;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-teal);
-  background: var(--color-teal-lt);
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
+  color: #0D2B30; /* Tu color dark */
+  white-space: nowrap; /* Impide que el texto se parta en dos */
 }
-.header__cuota-badge--alerta { color: var(--color-error); background: #FFF3F3; }
-.header__user { font-size: 0.8125rem; color: var(--color-gray); }
+
+/* Botones con forma real */
+.btn-nav {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem !important;
+  display: inline-block;
+}
+
+.btn-primary {
+  background-color: #00C9B1 !important; /* Tu color menta */
+  color: white !important;
+  font-weight: 700;
+}
+
+/* REGLA DE ORO: Si la pantalla es pequeña, reduce el tamaño de todo para que quepa */
+@media (max-width: 1200px) {
+  .nav-links { gap: 1rem; }
+  .nav-links li a { font-size: 0.8rem; }
+}
+
+@media (max-width: 992px) {
+  /* En tablets/laptops pequeñas, quitamos textos largos para ganar espacio */
+  .nav-links li:nth-child(2), 
+  .nav-links li:nth-child(4) { display: none; } 
+}
 
 /* ─── Page ───────────────────────────────────────────────────── */
 .page { max-width: 1200px; }
