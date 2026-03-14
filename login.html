@@ -188,7 +188,7 @@
 
   .btn-submit:active { transform: translateY(0); }
 
-  .btn-submit.loading { pointer-events: none; }
+  .btn-submit.loading { pointer-events: none; color: transparent; }
   .btn-submit.loading::after {
     content: '';
     position: absolute; top: 50%; left: 50%;
@@ -239,7 +239,6 @@
 </head>
 <body>
 
-<!-- LEFT PANEL -->
 <div class="left-panel">
   <div class="panel-content">
     <a href="index.html" class="logo">EduTech<span>Innova</span></a>
@@ -270,7 +269,6 @@
   </div>
 </div>
 
-<!-- RIGHT PANEL -->
 <div class="right-panel">
 
   <div class="tab-switcher">
@@ -278,7 +276,6 @@
     <button class="tab-btn" onclick="switchTab('registro')">Registrarse</button>
   </div>
 
-  <!-- LOGIN -->
   <div id="login-form" class="form-section active">
     <h2>Bienvenido de vuelta</h2>
     <p class="form-subtitle">Ingresa con tu cuenta institucional</p>
@@ -295,7 +292,7 @@
       <input type="password" id="login-password" placeholder="••••••••">
     </div>
 
-    <button class="btn-submit" id="login-btn" onclick="handleLogin()">
+    <button class="btn-submit" id="login-btn" onclick="handleLogin(event)">
       Ingresar a mi panel
     </button>
 
@@ -310,7 +307,6 @@
     </div>
   </div>
 
-  <!-- REGISTRO -->
   <div id="registro-form" class="form-section">
     <h2>Registra tu institución</h2>
     <p class="form-subtitle">Piloto gratuito — sin tarjeta de crédito</p>
@@ -360,7 +356,7 @@
       <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres">
     </div>
 
-    <button class="btn-submit" id="registro-btn" onclick="handleRegistro()">
+    <button class="btn-submit" id="registro-btn" onclick="handleRegistro(event)">
       Crear cuenta gratuita →
     </button>
 
@@ -372,21 +368,9 @@
 </div>
 
 <script>
-// =============================================
-// CONFIGURACIÓN SUPABASE
-// =============================================
-// 🔧 INSTRUCCIONES DE CONFIGURACIÓN:
-// 1. Ve a https://supabase.com y crea tu proyecto
-// 2. En "Settings > API" copia tu Project URL y anon key
-// 3. Reemplaza los valores de abajo
-// 4. Crea las tablas necesarias (ver README)
-
 const SUPABASE_URL = 'https://wazdaohczeqrrpfzjgcs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhemRhb2hjemVxcnJwZnpqZ2NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NzYzMzEsImV4cCI6MjA4ODI1MjMzMX0.MsieEfEnBNCl7koLxAeLsLbaIVuhIFAipd2076acGzU';
 
-// =============================================
-// FUNCIONES DE UI
-// =============================================
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
     b.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'registro' && i === 1));
@@ -408,17 +392,10 @@ function hideAlert(id) {
 function setLoading(btnId, loading) {
   const btn = document.getElementById(btnId);
   btn.classList.toggle('loading', loading);
-  btn.textContent = loading ? '' : btn.dataset.label;
 }
 
-// Guardar labels
-document.getElementById('login-btn').dataset.label = 'Ingresar a mi panel';
-document.getElementById('registro-btn').dataset.label = 'Crear cuenta gratuita →';
-
-// =============================================
-// LOGIN CON SUPABASE
-// =============================================
-async function handleLogin() {
+async function handleLogin(e) {
+  if(e) e.preventDefault();
   hideAlert('login-alert');
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
@@ -448,52 +425,31 @@ async function handleLogin() {
       return;
     }
 
-    // Guardar sesión
     localStorage.setItem('edutech_token', data.access_token);
-    localStorage.setItem('edutech_user', JSON.stringify(data.user));
-
-    // Verificar si es admin o institución
-    const userMeta = data.user?.user_metadata || {};
-    if (userMeta.role === 'admin') {
-      window.location.href = 'admin.html';
-    } else {
-      window.location.href = 'dashboard.html';
-    }
+    window.location.href = 'dashboard.html';
 
   } catch (err) {
-    showAlert('login-alert', 'error', '⚠️ Sin conexión. Verifica tu internet.');
+    showAlert('login-alert', 'error', '⚠️ Error de conexión.');
     setLoading('login-btn', false);
   }
 }
 
-// =============================================
-// REGISTRO CON SUPABASE
-// =============================================
-async function handleRegistro() {
+async function handleRegistro(e) {
+  if(e) e.preventDefault();
   hideAlert('registro-alert');
 
   const institucion = document.getElementById('reg-institucion').value.trim();
-  const nombre = document.getElementById('reg-nombre').value.trim();
-  const cargo = document.getElementById('reg-cargo').value.trim();
   const email = document.getElementById('reg-email').value.trim();
-  const telefono = document.getElementById('reg-telefono').value.trim();
-  const plan = document.getElementById('reg-plan').value;
   const password = document.getElementById('reg-password').value;
 
-  if (!institucion || !nombre || !email || !plan || !password) {
-    showAlert('registro-alert', 'error', '⚠️ Completa todos los campos obligatorios');
-    return;
-  }
-
-  if (password.length < 8) {
-    showAlert('registro-alert', 'error', '⚠️ La contraseña debe tener al menos 8 caracteres');
+  if (!institucion || !email || !password) {
+    showAlert('registro-alert', 'error', '⚠️ Completa los campos obligatorios');
     return;
   }
 
   setLoading('registro-btn', true);
 
   try {
-    // 1. Crear usuario en Supabase Auth
     const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
       method: 'POST',
       headers: {
@@ -503,64 +459,26 @@ async function handleRegistro() {
       body: JSON.stringify({
         email,
         password,
-        data: {
-          role: 'institucion',
-          institucion,
-          nombre,
-          cargo,
-          telefono,
-          plan
-        }
+        data: { institucion }
       })
     });
 
     const data = await res.json();
 
     if (!res.ok || data.error) {
-      showAlert('registro-alert', 'error', '❌ ' + (data.msg || data.error || 'Error al registrar'));
+      showAlert('registro-alert', 'error', '❌ Error al registrar');
       setLoading('registro-btn', false);
       return;
     }
 
-    // 2. Guardar en tabla instituciones (si ya confirmó email)
-    if (data.access_token) {
-      await fetch(`${SUPABASE_URL}/rest/v1/instituciones`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${data.access_token}`
-        },
-        body: JSON.stringify({
-          user_id: data.user.id,
-          nombre_institucion: institucion,
-          nombre_responsable: nombre,
-          cargo,
-          telefono,
-          plan,
-          estado: 'activo'
-        })
-      });
-
-      localStorage.setItem('edutech_token', data.access_token);
-      localStorage.setItem('edutech_user', JSON.stringify(data.user));
-      window.location.href = 'dashboard.html';
-    } else {
-      // Necesita confirmar email
-      showAlert('registro-alert', 'success', '✅ ¡Registro exitoso! Revisa tu correo para confirmar tu cuenta.');
-      setLoading('registro-btn', false);
-    }
+    showAlert('registro-alert', 'success', '✅ ¡Registro exitoso! Revisa tu correo.');
+    setLoading('registro-btn', false);
 
   } catch (err) {
-    showAlert('registro-alert', 'error', '⚠️ Sin conexión. Verifica tu internet.');
+    showAlert('registro-alert', 'error', '⚠️ Error de conexión.');
     setLoading('registro-btn', false);
   }
 }
-
-// Enter para login
-document.getElementById('login-password').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') handleLogin();
-});
 </script>
 </body>
 </html>
