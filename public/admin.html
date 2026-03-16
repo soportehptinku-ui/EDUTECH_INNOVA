@@ -504,8 +504,8 @@
 // =============================================
 // CONFIGURACIÓN SUPABASE
 // =============================================
-const SUPABASE_URL = 'TU_SUPABASE_URL_AQUI';
-const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY_AQUI';
+const SUPABASE_URL = 'https://wazdaohczeqrrpfzjgcs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhemRhb2hjemVxcnJwZnpqZ2NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NzYzMzEsImV4cCI6MjA4ODI1MjMzMX0.MsieEfEnBNCl7koLxAeLsLbaIVuhIFAipd2076acGzU';
 
 // Auth check
 const token = localStorage.getItem('edutech_token');
@@ -528,12 +528,39 @@ let allOrders = [
   { id: '#008', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', plan: 'BASIC', archivo: 'Circulares_Padres.pdf', tipo: 'B&N', copias: 50, paginas: 50, estado: 'entregado', fecha: '11 Ene', instrucciones: '' },
 ];
 
-const instituciones = [
+// Mantenemos los de ejemplo
+const institucionesDemo = [
   { nombre: 'Colegio San Martín', responsable: 'María Torres', cargo: 'Directora', plan: 'GOLD', pedidos: 2, telefono: '+51 999 111 222' },
   { nombre: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', cargo: 'Administrador', plan: 'PRO', pedidos: 2, telefono: '+51 999 333 444' },
   { nombre: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', cargo: 'Director', plan: 'START', pedidos: 2, telefono: '+51 999 555 666' },
   { nombre: 'Nido Los Girasoles', responsable: 'Ana Lima', cargo: 'Directora', plan: 'BASIC', pedidos: 2, telefono: '+51 999 777 888' },
 ];
+
+let institucionesReales = [];
+
+// Función para traer a los nuevos de Supabase
+async function obtenerNuevasInstituciones() {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/instituciones?select=*`, {
+            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+        });
+        const data = await response.json();
+        
+        institucionesReales = data.map(i => ({
+            nombre: i.nombre_institucion,
+            responsable: i.nombre_responsable,
+            cargo: i.cargo,
+            plan: i.plan || 'S/N',
+            pedidos: 0,
+            telefono: i.telefono
+        }));
+
+        renderInstituciones();
+        updateStats();
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
 
 // =============================================
 // NAVEGACIÓN
@@ -719,23 +746,28 @@ function closeModal(e) {
 // INSTITUCIONES
 // =============================================
 function renderInstituciones() {
-  document.getElementById('inst-grid-container').innerHTML = instituciones.map(inst => `
-    <div class="inst-card">
-      <div class="inst-name">${inst.nombre}</div>
-      <div class="inst-plan">${inst.plan}</div>
-      <div class="inst-meta">
-        👤 ${inst.responsable} · ${inst.cargo}<br>
-        📱 ${inst.telefono}<br>
-        📦 ${inst.pedidos} pedidos realizados
-      </div>
-      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
-        <a href="https://wa.me/${inst.telefono.replace(/\D/g,'')}" style="flex:1;text-align:center;padding:0.4rem;background:rgba(0,201,177,0.1);border:1px solid rgba(0,201,177,0.2);color:var(--mint);border-radius:6px;font-size:0.75rem;text-decoration:none;font-weight:600;">WhatsApp</a>
-        <button onclick="showToast('Ver pedidos de: ${inst.nombre}')" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border-radius:6px;font-size:0.75rem;cursor:pointer;">Ver pedidos</button>
-      </div>
-    </div>
-  `).join('');
-}
+    const todasLasInst = [...institucionesDemo, ...institucionesReales];
+    
+    // Actualiza el número en el cuadrito azul de arriba
+    const counter = document.getElementById('admin-instituciones');
+    if(counter) counter.textContent = todasLasInst.length;
 
+    document.getElementById('inst-grid-container').innerHTML = todasLasInst.map(inst => `
+        <div class="inst-card">
+          <div class="inst-name">${inst.nombre}</div>
+          <div class="inst-plan">${inst.plan}</div>
+          <div class="inst-meta">
+            👤 ${inst.responsable} · ${inst.cargo}<br>
+            📱 ${inst.telefono}<br>
+            📦 ${inst.pedidos} pedidos realizados
+          </div>
+          <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+            <a href="https://wa.me/${inst.telefono.replace(/\D/g,'')}" target="_blank" style="flex:1;text-align:center;padding:0.4rem;background:rgba(0,201,177,0.1);border:1px solid rgba(0,201,177,0.2);color:var(--mint);border-radius:6px;font-size:0.75rem;text-decoration:none;font-weight:600;">WhatsApp</a>
+            <button onclick="showToast('Ver pedidos de: ${inst.nombre}')" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border-radius:6px;font-size:0.75rem;cursor:pointer;">Ver pedidos</button>
+          </div>
+        </div>
+    `).join('');
+}
 // =============================================
 // UTILS
 // =============================================
@@ -757,6 +789,7 @@ function logout() {
 // =============================================
 // INIT
 // =============================================
+obtenerNuevasInstituciones(); // <--- Agrega esta línea aquí
 renderOrdersTable(allOrders);
 updateStats();
 </script>
