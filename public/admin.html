@@ -789,9 +789,18 @@ function logout() {
 // =============================================
 // INIT
 // =============================================
-obtenerNuevasInstituciones(); // <--- Agrega esta línea aquí
-renderOrdersTable(allOrders);
-updateStats();
+async function init() {
+    // Primero traemos los datos de Supabase
+    await obtenerNuevasInstituciones();
+    
+    // Luego cargamos el resto de la página
+    renderOrdersTable(allOrders);
+    updateStats();
+}
+
+// Ejecutamos el inicio
+init();
+
 </script>
 </body>
 </html>
