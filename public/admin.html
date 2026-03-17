@@ -121,7 +121,7 @@
     background: var(--mint);
     animation: pulse 2s infinite;
   }
-  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
   .content { padding: 2rem; }
 
@@ -274,7 +274,7 @@
   .modal {
     background: var(--dark); border: 1px solid var(--border);
     border-radius: 20px; padding: 2rem; width: 100%; max-width: 500px;
-    margin: 1rem; animation: slideUp 0.3s ease;
+    margin: 1rem; position: relative; animation: slideUp 0.3s ease;
   }
 
   @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
@@ -335,7 +335,6 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <a href="index.html" class="sidebar-logo">EduTech<span>Innova</span></a>
   <div class="admin-badge">🔑 Admin</div>
@@ -360,7 +359,6 @@
   </div>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
@@ -374,7 +372,6 @@
 
   <div class="content">
 
-    <!-- STATS -->
     <div class="stats-row">
       <div class="stat-card white">
         <div class="stat-label">Total pedidos</div>
@@ -398,7 +395,6 @@
       </div>
     </div>
 
-    <!-- ====== PEDIDOS ====== -->
     <div id="admin-view-pedidos">
       <div class="filters-bar">
         <button class="filter-btn active" onclick="filterOrders('todos', this)">Todos</button>
@@ -417,72 +413,16 @@
       </div>
     </div>
 
-    <!-- ====== INSTITUCIONES ====== -->
     <div id="admin-view-instituciones" style="display:none;">
       <div class="inst-grid" id="inst-grid-container"></div>
     </div>
 
-    <!-- ====== MÉTRICAS ====== -->
-   <div id="admin-view-metricas" style="display:none;">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
-        
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Ingresos este mes</div>
-          <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--mint);">S/ 8,608</div>
-          <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:0.4rem;">Proyección M1-3</div>
-          <div style="margin-top:1.5rem;display:flex;gap:1.5rem;">
-            <div>
-              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">MRR</div>
-              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);">S/ 5,990</div>
-            </div>
-            <div>
-              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Instituciones</div>
-              <div style="font-family:'Syne',sans-serif;font-weight:700;">10</div>
-            </div>
-            <div>
-              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">EBITDA</div>
-              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--error);">-S/27,573</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Proyección 24 meses</div>
-          <div style="display:flex;flex-direction:column;gap:0.6rem;">
-            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
-                <span>M1-3</span> <b>S/ 8,608</b> <span style="color:var(--error);">Inversión</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
-                <span>M4-6</span> <b>S/ 28,832</b> <span style="color:var(--error);">Inversión</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
-                <span>M7-9</span> <b>S/ 63,052</b> <span style="color:var(--mint);">✓ EBITDA+</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
-                <span>M10-12</span> <b>S/ 98,532</b> <span style="color:var(--mint);">✓ EBITDA+</span>
-            </div>
-          </div>
-        </div>
-
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Unit Economics</div>
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem;">
-            <span style="color:rgba(255,255,255,0.4);">LTV/CAC Ratio</span> <span style="color:var(--mint);font-weight:700;">20.8x</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem;">
-            <span style="color:rgba(255,255,255,0.4);">Payback</span> <span style="color:var(--mint);font-weight:700;">1.04 meses</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem;">
-            <span style="color:rgba(255,255,255,0.4);">Churn mensual</span> <span style="color:var(--mint);font-weight:700;">3%</span>
-          </div>
-        </div>
-
-      </div>
+    <div id="admin-view-metricas" style="display:none;">
+      <div id="metrics-grid-container"></div>
     </div>
 
-<!-- MODAL DETALLE PEDIDO -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" style="position:relative;">
+  </div></div><div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
     <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('show')">✕</button>
     <div class="modal-title" id="modal-title">Detalle del pedido</div>
     <div id="modal-content"></div>
@@ -490,7 +430,6 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="alert-toast" id="toast"></div>
 
 <script>
@@ -508,20 +447,19 @@ if (!token) window.location.href = 'login.html';
 document.getElementById('today-date').textContent = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'long', year:'numeric' });
 
 // =============================================
-// DEMO DATA (reemplazar con Supabase queries)
+// DATA & STATE
 // =============================================
 let allOrders = [
   { id: '#001', institucion: 'Colegio San Martín', responsable: 'María Torres', plan: 'GOLD', archivo: 'Examen_Mat_3A.pdf', tipo: 'B&N', copias: 35, paginas: 105, estado: 'entregado', fecha: '12 Ene', instrucciones: 'A doble cara' },
   { id: '#002', institucion: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', plan: 'PRO', archivo: 'Fichas_Lectura_Sem4.pdf', tipo: 'Color', copias: 10, paginas: 80, estado: 'proceso', fecha: '14 Ene', instrucciones: '' },
   { id: '#003', institucion: 'Colegio San Martín', responsable: 'María Torres', plan: 'GOLD', archivo: 'Cuestionario_Ciencias.pdf', tipo: 'B&N', copias: 30, paginas: 60, estado: 'pendiente', fecha: '15 Ene', instrucciones: 'Urgente' },
   { id: '#004', institucion: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', plan: 'START', archivo: 'Practica_Fisica.pdf', tipo: 'B&N', copias: 25, paginas: 50, estado: 'pendiente', fecha: '15 Ene', instrucciones: '' },
-  { id: '#005', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', plan: 'BASIC', archivo: 'Manualidad_Mes_Enero.pdf', tipo: 'Color', copias: 20, paginas: 20, estado: 'proceso', fecha: '16 Ene', instrucciones: 'Papel grueso' },
+  { id: '#005', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', cargo: 'Directora', archivo: 'Manualidad_Mes_Enero.pdf', tipo: 'Color', copias: 20, paginas: 20, estado: 'proceso', fecha: '16 Ene', instrucciones: 'Papel grueso' },
   { id: '#006', institucion: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', plan: 'PRO', archivo: 'Examen_Semestral_Admin.pdf', tipo: 'B&N', copias: 60, paginas: 180, estado: 'entregado', fecha: '10 Ene', instrucciones: '' },
   { id: '#007', institucion: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', plan: 'START', archivo: 'Simulacro_Premedica.pdf', tipo: 'B&N', copias: 40, paginas: 120, estado: 'pendiente', fecha: '16 Ene', instrucciones: '' },
-  { id: '#008', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', plan: 'BASIC', archivo: 'Circulares_Padres.pdf', tipo: 'B&N', copias: 50, paginas: 50, estado: 'entregado', fecha: '11 Ene', instrucciones: '' },
+  { id: '#008', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', archivo: 'Circulares_Padres.pdf', tipo: 'B&N', copias: 50, paginas: 50, estado: 'entregado', fecha: '11 Ene', instrucciones: '' },
 ];
 
-// Mantenemos los de ejemplo
 const institucionesDemo = [
   { nombre: 'Colegio San Martín', responsable: 'María Torres', cargo: 'Directora', plan: 'GOLD', pedidos: 2, telefono: '+51 999 111 222' },
   { nombre: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', cargo: 'Administrador', plan: 'PRO', pedidos: 2, telefono: '+51 999 333 444' },
@@ -531,10 +469,11 @@ const institucionesDemo = [
 
 let institucionesReales = [];
 
-// Función para traer a los nuevos de Supabase
+// =============================================
+// SUPABASE FETCH
+// =============================================
 async function obtenerNuevasInstituciones() {
     try {
-        // Cambiado a 'institucion' (singular)
         const response = await fetch(`${SUPABASE_URL}/rest/v1/institucion?select=*`, {
             headers: { 
                 'apikey': SUPABASE_ANON_KEY, 
@@ -542,26 +481,21 @@ async function obtenerNuevasInstituciones() {
             }
         });
         const data = await response.json();
-        
-        console.log("Datos cargados:", data); // Esto es para ver si llegan
-
         if (Array.isArray(data)) {
             institucionesReales = data.map(i => ({
-                nombre: i.nombre_institucion, // Nombre exacto de tu columna
-                responsable: i.nombre_responsable, // Nombre exacto de tu columna
-                cargo: i.cargo,
-                plan: i.plan || 'S/N',
+                nombre: i.nombre_institucion, 
+                responsable: i.nombre_responsable,
+                cargo: i.cargo || 'Directivo',
+                plan: i.plan || 'BASIC',
                 pedidos: 0,
-                telefono: i.telefono
+                telefono: i.telefono || ''
             }));
+            renderInstituciones();
+            updateStats();
         }
-
-        renderInstituciones();
-        updateStats();
-    } catch (error) {
-        console.error("Error al conectar:", error);
-    }
+    } catch (e) { console.error("Error cargando:", e); }
 }
+
 // =============================================
 // NAVEGACIÓN
 // =============================================
@@ -571,15 +505,111 @@ function switchAdminView(view) {
   });
   document.querySelectorAll('.nav-item').forEach((btn, i) => {
     const labels = ['pedidos','instituciones','metricas'];
-    btn.classList.toggle('active', btn.textContent.trim().toLowerCase().includes(labels[i]?.split(' ')[0]));
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase().includes(labels[i]));
   });
   const titles = { pedidos:'Todos los pedidos', instituciones:'Instituciones', metricas:'Métricas del negocio' };
   document.getElementById('admin-topbar-title').textContent = titles[view];
+  
   if (view === 'instituciones') renderInstituciones();
+  if (view === 'metricas') renderMetricas();
 }
 
 // =============================================
-// RENDER ORDERS TABLE
+// RENDER INSTITUCIONES
+// =============================================
+function renderInstituciones() {
+  const listaTotal = [...institucionesDemo, ...institucionesReales];
+  const container = document.getElementById('inst-grid-container');
+  if(!container) return;
+
+  container.innerHTML = listaTotal.map(inst => `
+    <div class="inst-card">
+      <div class="inst-name">${inst.nombre}</div>
+      <div class="inst-plan">${inst.plan}</div>
+      <div class="inst-meta">
+        👤 ${inst.responsable} · ${inst.cargo}<br>
+        📱 ${inst.telefono}<br>
+        📦 ${inst.pedidos} pedidos realizados
+      </div>
+      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+        <a href="https://wa.me/${inst.telefono.replace(/\D/g,'')}" target="_blank" style="flex:1;text-align:center;padding:0.4rem;background:rgba(0,201,177,0.1);border:1px solid rgba(0,201,177,0.2);color:var(--mint);border-radius:6px;font-size:0.75rem;text-decoration:none;font-weight:600;">WhatsApp</a>
+        <button onclick="showToast('Ver pedidos de: ${inst.nombre}')" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border-radius:6px;font-size:0.75rem;cursor:pointer;">Ver pedidos</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =============================================
+// RENDER MÉTRICAS (Corregido)
+// =============================================
+function renderMetricas() {
+  const totalInst = institucionesDemo.length + institucionesReales.length;
+  const container = document.getElementById('metrics-grid-container');
+  
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Ingresos este mes</div>
+          <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--mint);">S/ 8,608</div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:0.4rem;">Proyección M1-3</div>
+          <div style="margin-top:1.5rem;display:flex;gap:1.5rem;">
+            <div>
+              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">MRR</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);">S/ 5,990</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Instituciones</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;">${totalInst}</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">EBITDA</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--error);">-S/27,573</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Proyección 24 meses</div>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;">
+              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M1-3</span>
+                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 8,608</span>
+                <span style="font-size:0.75rem;font-weight:700;color:var(--error);">Inversión</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M10-12</span>
+                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 98,532</span>
+                <span style="font-size:0.75rem;font-weight:700;color:var(--mint);">✓ EBITDA+</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
+                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M22-24</span>
+                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 245,014</span>
+                <span style="font-size:0.75rem;font-weight:700;color:var(--mint);">✓ EBITDA+</span>
+              </div>
+          </div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Unit Economics</div>
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">LTV Neto</span>
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">S/ 39,034</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Payback</span>
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">1.04 meses</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
+              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Churn mensual</span>
+              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">3%</span>
+            </div>
+        </div>
+    </div>
+  `;
+}
+
+// =============================================
+// PEDIDOS & TABLA
 // =============================================
 let currentFilter = 'todos';
 let currentSearch = '';
@@ -589,10 +619,7 @@ function renderOrdersTable(orders) {
   document.getElementById('order-count').textContent = `${orders.length} pedido${orders.length !== 1 ? 's' : ''}`;
 
   if (!orders.length) {
-    container.innerHTML = `<div style="text-align:center;padding:3rem;color:rgba(255,255,255,0.3);">
-      <div style="font-size:2rem;margin-bottom:0.75rem;">📭</div>
-      <p>No hay pedidos con este filtro</p>
-    </div>`;
+    container.innerHTML = `<div style="text-align:center;padding:3rem;color:rgba(255,255,255,0.3);">📭<p>No hay pedidos</p></div>`;
     return;
   }
 
@@ -605,40 +632,21 @@ function renderOrdersTable(orders) {
 
   container.innerHTML = `
     <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Institución</th>
-          <th>Plan</th>
-          <th>Archivo</th>
-          <th>Tipo</th>
-          <th>Copias</th>
-          <th>Pág.</th>
-          <th>Estado</th>
-          <th>Fecha</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
+      <thead><tr><th>ID</th><th>Institución</th><th>Plan</th><th>Archivo</th><th>Tipo</th><th>Copias</th><th>Pág.</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
       <tbody>
         ${orders.map(o => {
           const [cls, label] = statusMap[o.estado] || ['s-pendiente', o.estado];
           return `<tr>
             <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);cursor:pointer;" onclick="showOrderDetail('${o.id}')">${o.id}</td>
-            <td>
-              <div style="font-weight:500;">${o.institucion}</div>
-              <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">${o.responsable}</div>
-            </td>
-            <td><span style="background:rgba(0,201,177,0.1);color:var(--mint);font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;">${o.plan}</span></td>
+            <td><div style="font-weight:500;">${o.institucion}</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">${o.responsable}</div></td>
+            <td><span style="background:rgba(0,201,177,0.1);color:var(--mint);font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;">${o.plan || 'BASIC'}</span></td>
             <td style="font-size:0.8rem;">📄 ${o.archivo}</td>
-            <td>${o.tipo}</td>
-            <td>${o.copias}</td>
-            <td>${o.paginas}</td>
+            <td>${o.tipo}</td><td>${o.copias}</td><td>${o.paginas}</td>
             <td><span class="status-badge ${cls}">${label}</span></td>
             <td style="color:rgba(255,255,255,0.4);font-size:0.8rem;">${o.fecha}</td>
             <td>
               ${o.estado === 'pendiente' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${o.id}','proceso')">▶ Iniciar</button>` : ''}
               ${o.estado === 'proceso' ? `<button class="action-btn btn-deliver" onclick="updateStatus('${o.id}','entregado')">✓ Entregar</button>` : ''}
-              ${o.estado !== 'entregado' && o.estado !== 'cancelado' ? `<button class="action-btn btn-cancel" onclick="updateStatus('${o.id}','cancelado')">✕</button>` : ''}
             </td>
           </tr>`;
         }).join('')}
@@ -662,145 +670,55 @@ function searchOrders(query) {
 function applyFilters() {
   let filtered = allOrders;
   if (currentFilter !== 'todos') filtered = filtered.filter(o => o.estado === currentFilter);
-  if (currentSearch) filtered = filtered.filter(o =>
-    o.institucion.toLowerCase().includes(currentSearch) ||
-    o.id.toLowerCase().includes(currentSearch) ||
-    o.archivo.toLowerCase().includes(currentSearch)
-  );
+  if (currentSearch) filtered = filtered.filter(o => o.institucion.toLowerCase().includes(currentSearch));
   renderOrdersTable(filtered);
 }
 
 function updateStatus(id, newStatus) {
   const order = allOrders.find(o => o.id === id);
-  if (!order) return;
-
-  // Aquí iría el update a Supabase:
-  // await fetch(`${SUPABASE_URL}/rest/v1/pedidos?id=eq.${id}`, { method:'PATCH', body: JSON.stringify({estado: newStatus}) ... })
-
-  order.estado = newStatus;
-  applyFilters();
-
-  const labels = { proceso: 'En proceso', entregado: 'Entregado', cancelado: 'Cancelado' };
-  showToast(`✅ Pedido ${id} → ${labels[newStatus]}`);
-
-  // Update stats
-  updateStats();
+  if (order) { order.estado = newStatus; applyFilters(); updateStats(); showToast(`✅ Pedido ${id} actualizado`); }
 }
 
 function updateStats() {
+  const totalInst = institucionesDemo.length + institucionesReales.length;
   document.getElementById('admin-total').textContent = allOrders.length;
   document.getElementById('admin-pendientes').textContent = allOrders.filter(o=>o.estado==='pendiente').length;
   document.getElementById('admin-proceso').textContent = allOrders.filter(o=>o.estado==='proceso').length;
   document.getElementById('admin-entregados').textContent = allOrders.filter(o=>o.estado==='entregado').length;
+  document.getElementById('admin-instituciones').textContent = totalInst;
 }
 
 // =============================================
-// MODAL DETALLE
+// MODAL & UTILS
 // =============================================
 function showOrderDetail(id) {
   const o = allOrders.find(x => x.id === id);
   if (!o) return;
-
   document.getElementById('modal-title').textContent = `Pedido ${o.id}`;
-
-  const rows = [
-    ['Institución', o.institucion],
-    ['Responsable', o.responsable],
-    ['Plan', o.plan],
-    ['Archivo', `📄 ${o.archivo}`],
-    ['Tipo de impresión', o.tipo],
-    ['Cantidad de copias', o.copias],
-    ['Páginas totales', o.paginas],
-    ['Estado', o.estado.charAt(0).toUpperCase() + o.estado.slice(1)],
-    ['Fecha de pedido', o.fecha],
-    ['Instrucciones', o.instrucciones || '(ninguna)'],
-  ];
-
-  document.getElementById('modal-content').innerHTML = rows.map(([k,v]) => `
-    <div class="detail-row">
-      <span class="detail-key">${k}</span>
-      <span class="detail-val">${v}</span>
-    </div>
-  `).join('');
-
-  const actions = document.getElementById('modal-actions');
-  actions.innerHTML = '';
-
-  if (o.estado === 'pendiente') {
-    actions.innerHTML += `<button class="btn btn-mint" style="flex:1;padding:0.65rem;" onclick="updateStatus('${o.id}','proceso');closeModal()">▶ Iniciar proceso</button>`;
-  }
-  if (o.estado === 'proceso') {
-    actions.innerHTML += `<button class="btn btn-mint" style="flex:1;padding:0.65rem;" onclick="updateStatus('${o.id}','entregado');closeModal()">✓ Marcar entregado</button>`;
-  }
-
+  document.getElementById('modal-content').innerHTML = `
+    <div class="detail-row"><span class="detail-key">Institución</span><span class="detail-val">${o.institucion}</span></div>
+    <div class="detail-row"><span class="detail-key">Archivo</span><span class="detail-val">${o.archivo}</span></div>
+    <div class="detail-row"><span class="detail-key">Instrucciones</span><span class="detail-val">${o.instrucciones || 'Ninguna'}</span></div>
+  `;
   document.getElementById('modal-overlay').classList.add('show');
 }
 
-function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('show');
-  }
-}
+function closeModal(e) { if (!e || e.target.classList.contains('modal-overlay')) document.getElementById('modal-overlay').classList.remove('show'); }
 
-// =============================================
-// INSTITUCIONES
-// =============================================
-function renderInstituciones() {
-    const todasLasInst = [...institucionesDemo, ...institucionesReales];
-    
-    // Actualiza el número en el cuadrito azul de arriba
-    const counter = document.getElementById('admin-instituciones');
-    if(counter) counter.textContent = todasLasInst.length;
-
-    document.getElementById('inst-grid-container').innerHTML = todasLasInst.map(inst => `
-        <div class="inst-card">
-          <div class="inst-name">${inst.nombre}</div>
-          <div class="inst-plan">${inst.plan}</div>
-          <div class="inst-meta">
-            👤 ${inst.responsable} · ${inst.cargo}<br>
-            📱 ${inst.telefono}<br>
-            📦 ${inst.pedidos} pedidos realizados
-          </div>
-          <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
-            <a href="https://wa.me/${inst.telefono.replace(/\D/g,'')}" target="_blank" style="flex:1;text-align:center;padding:0.4rem;background:rgba(0,201,177,0.1);border:1px solid rgba(0,201,177,0.2);color:var(--mint);border-radius:6px;font-size:0.75rem;text-decoration:none;font-weight:600;">WhatsApp</a>
-            <button onclick="showToast('Ver pedidos de: ${inst.nombre}')" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border-radius:6px;font-size:0.75rem;cursor:pointer;">Ver pedidos</button>
-          </div>
-        </div>
-    `).join('');
-}
-// =============================================
-// UTILS
-// =============================================
-function showToast(msg, isError = false) {
+function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderColor = isError ? '#FF4D4D' : 'var(--mint)';
-  t.style.color = isError ? '#FF4D4D' : 'var(--mint)';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 4000);
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-function logout() {
-  localStorage.removeItem('edutech_token');
-  localStorage.removeItem('edutech_user');
-  window.location.href = 'login.html';
-}
+function logout() { localStorage.clear(); window.location.href = 'login.html'; }
 
 // =============================================
 // INIT
 // =============================================
-async function init() {
-    // Primero traemos los datos de Supabase
-    await obtenerNuevasInstituciones();
-    
-    // Luego cargamos el resto de la página
-    renderOrdersTable(allOrders);
-    updateStats();
-}
-
-// Ejecutamos el inicio
-init();
-
+renderOrdersTable(allOrders);
+obtenerNuevasInstituciones();
+updateStats();
 </script>
 </body>
 </html>
