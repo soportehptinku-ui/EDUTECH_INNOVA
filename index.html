@@ -1973,22 +1973,35 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     btn.disabled = true;
 
     try {
-      // Usamos 'supabaseClient' que acabamos de definir arriba
-      const { error } = await supabaseClient.from('Perfiles').insert([datos]);
+      try {
+      // 1. Guardamos en la tabla correcta (ajusta 'institucion' si el nombre es otro)
+      const { error } = await supabaseClient
+        .from('institucion') 
+        .insert([{
+          nombre_institucion: datos.nombre_colegio,
+          ruc: datos.ruc,
+          distrito: datos.distrito,
+          telefono: datos.celular,
+          correo: datos.correo_electronico
+        }]);
       
       if (error) throw error;
 
+      // 2. Quitamos el formulario
       document.getElementById('modal-form-wrap').style.display = 'none';
-      document.getElementById('modal-success').style.display = 'block';
+      
+      // 3. CAMBIO CLAVE: En lugar de mostrar el mensaje de "revisa tu correo",
+      // vamos a mostrar un mensaje de éxito directo o redirigir.
+      alert("¡Registro exitoso! Ya puedes ingresar con tu cuenta.");
+      window.location.href = "/auth/login"; // Esto los manda al Login que me mostraste antes
 
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error detallado:", err);
       alert("Error al registrar: " + err.message);
     } finally {
-      btn.innerText = "Solicitar reunión";
+      btn.innerText = "Registrar mi institución";
       btn.disabled = false;
     }
-  }
 
   // Esto es para que los links no fallen
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
