@@ -541,27 +541,34 @@ let institucionesReales = [];
 // Función para traer a los nuevos de Supabase
 async function obtenerNuevasInstituciones() {
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/instituciones?select=*`, {
-            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+        // Cambiado a 'institucion' (singular)
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/institucion?select=*`, {
+            headers: { 
+                'apikey': SUPABASE_ANON_KEY, 
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}` 
+            }
         });
         const data = await response.json();
         
-        institucionesReales = data.map(i => ({
-            nombre: i.nombre_institucion,
-            responsable: i.nombre_responsable,
-            cargo: i.cargo,
-            plan: i.plan || 'S/N',
-            pedidos: 0,
-            telefono: i.telefono
-        }));
+        console.log("Datos cargados:", data); // Esto es para ver si llegan
+
+        if (Array.isArray(data)) {
+            institucionesReales = data.map(i => ({
+                nombre: i.nombre_institucion, // Nombre exacto de tu columna
+                responsable: i.nombre_responsable, // Nombre exacto de tu columna
+                cargo: i.cargo,
+                plan: i.plan || 'S/N',
+                pedidos: 0,
+                telefono: i.telefono
+            }));
+        }
 
         renderInstituciones();
         updateStats();
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error al conectar:", error);
     }
 }
-
 // =============================================
 // NAVEGACIÓN
 // =============================================
