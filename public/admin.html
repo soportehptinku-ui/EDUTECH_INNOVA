@@ -423,8 +423,9 @@
     </div>
 
     <!-- ====== MÉTRICAS ====== -->
-    <div id="admin-view-metricas" style="display:none;">
+   <div id="admin-view-metricas" style="display:none;">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+        
         <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
           <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Ingresos este mes</div>
           <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--mint);">S/ 8,608</div>
@@ -448,44 +449,36 @@
         <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
           <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Proyección 24 meses</div>
           <div style="display:flex;flex-direction:column;gap:0.6rem;">
-            ${[
-              ['M1-3', 'S/ 8,608', '10 inst.', '-'],
-              ['M4-6', 'S/ 28,832', '28 inst.', '-'],
-              ['M7-9', 'S/ 63,052', '46 inst.', '+'],
-              ['M10-12', 'S/ 98,532', '64 inst.', '+'],
-              ['M22-24', 'S/ 245,014', '136 inst.', '+'],
-            ].map(([p, ing, inst, sign]) => `
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
-                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${p}</span>
-                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">${ing}</span>
-                <span style="font-size:0.78rem;color:rgba(255,255,255,0.4);">${inst}</span>
-                <span style="font-size:0.75rem;font-weight:700;color:${sign==='+'?'var(--mint)':'var(--error)'};">${sign === '+' ? '✓ EBITDA+' : 'Inversión'}</span>
-              </div>
-            `).join('')}
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
+                <span>M1-3</span> <b>S/ 8,608</b> <span style="color:var(--error);">Inversión</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
+                <span>M4-6</span> <b>S/ 28,832</b> <span style="color:var(--error);">Inversión</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
+                <span>M7-9</span> <b>S/ 63,052</b> <span style="color:var(--mint);">✓ EBITDA+</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04); font-size:0.85rem;">
+                <span>M10-12</span> <b>S/ 98,532</b> <span style="color:var(--mint);">✓ EBITDA+</span>
+            </div>
           </div>
         </div>
 
         <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
           <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Unit Economics</div>
-          ${[
-            ['CAC', 'S/ 1,880'],
-            ['LTV Neto', 'S/ 39,034'],
-            ['LTV/CAC Ratio', '20.8x'],
-            ['Payback', '1.04 meses'],
-            ['Churn mensual', '3%'],
-            ['Vida promedio', '33.3 meses'],
-          ].map(([k,v]) => `
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">${k}</span>
-              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">${v}</span>
-            </div>
-          `).join('')}
+          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem;">
+            <span style="color:rgba(255,255,255,0.4);">LTV/CAC Ratio</span> <span style="color:var(--mint);font-weight:700;">20.8x</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem;">
+            <span style="color:rgba(255,255,255,0.4);">Payback</span> <span style="color:var(--mint);font-weight:700;">1.04 meses</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem;">
+            <span style="color:rgba(255,255,255,0.4);">Churn mensual</span> <span style="color:var(--mint);font-weight:700;">3%</span>
+          </div>
         </div>
+
       </div>
     </div>
-
-  </div><!-- /content -->
-</div><!-- /main -->
 
 <!-- MODAL DETALLE PEDIDO -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
