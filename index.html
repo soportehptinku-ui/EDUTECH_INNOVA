@@ -1972,46 +1972,42 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     btn.innerText = "Enviando...";
     btn.disabled = true;
 
-      try {
-      // 1. REGISTRO EN AUTH (Esto crea el usuario para que pueda hacer Login)
-      // Usamos una contraseña genérica o puedes capturar una de un input
-      const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-        email: datos.correo_electronico,
-        password: 'PasswordTemporal123', // Luego el usuario la puede cambiar
-      });
+      // ... (aquí van tus líneas donde capturas 'datos' y el 'if' de validación) ...
 
-      if (authError) throw authError;
+try { // <--- EMPIEZA CON UN SOLO TRY
+  // 1. Registro en la sección de Autenticación
+  const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+    email: datos.correo_electronico,
+    password: 'PasswordTemporal123', 
+  });
 
-      // 2. GUARDAR DATOS EN LA TABLA (Para que aparezca en tu lista de colegios)
-      // Asegúrate de que los nombres a la izquierda coincidan con tus columnas en Supabase
-      const { error: dbError } = await supabaseClient
-        .from('institucion') 
-        .insert([{
-          nombre_institucion: datos.nombre_colegio,
-          ruc: datos.ruc,
-          distrito: datos.distrito,
-          telefono: datos.celular,
-          correo: datos.correo_electronico
-        }]);
-      
-      if (dbError) throw dbError;
+  if (authError) throw authError;
 
-      // 3. ÉXITO: Quitamos el formulario y avisamos
-      document.getElementById('modal-form-wrap').style.display = 'none';
-      
-      // Mensaje directo sin hablar de confirmaciones de correo
-      alert("¡Registro exitoso! Ya puedes ingresar con tu cuenta institucional.");
-      
-      // Lo mandamos al Login para que entre de una vez
-      window.location.href = "/auth/login"; 
+  // 2. Guardar en tu tabla 'institucion' (con la columna 'correo' que creaste)
+  const { error: dbError } = await supabaseClient
+    .from('institucion') 
+    .insert([{
+      nombre_institucion: datos.nombre_colegio,
+      ruc: datos.ruc,
+      distrito: datos.distrito,
+      telefono: datos.celular,
+      correo: datos.correo_electronico
+    }]);
+  
+  if (dbError) throw dbError;
 
-    } catch (err) {
-      console.error("Error detallado:", err);
-      alert("Hubo un problema: " + err.message);
-    } finally {
-      btn.innerText = "Registrar mi institución";
-      btn.disabled = false;
-    }
+  // 3. Finalizar proceso
+  document.getElementById('modal-form-wrap').style.display = 'none';
+  alert("¡Registro exitoso! Ya puedes ingresar con tu cuenta.");
+  window.location.href = "/auth/login"; 
+
+} catch (err) {
+  console.error("Error detallado:", err);
+  alert("Hubo un problema: " + err.message);
+} finally {
+  btn.innerText = "Registrar mi institución";
+  btn.disabled = false;
+}
   // Esto es para que los links no fallen
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
