@@ -471,8 +471,16 @@ async function handleRegistro(e) {
       return;
     }
 
-    showAlert('registro-alert', 'success', '✅ ¡Registro exitoso! Revisa tu correo.');
-    setLoading('registro-btn', false);
+    // Registro exitoso — iniciamos sesión automáticamente sin esperar confirmación de correo
+    if (data.access_token) {
+      localStorage.setItem('edutech_token', data.access_token);
+      localStorage.setItem('sb-wazdaohczeqrrpfzjgcs-auth-token', JSON.stringify(data));
+      window.location.href = 'dashboard.html';
+    } else {
+      showAlert('registro-alert', 'success', '✅ ¡Registro exitoso! Ahora ingresa con tu correo y contraseña.');
+      switchTab('login');
+      setLoading('registro-btn', false);
+    }
 
   } catch (err) {
     showAlert('registro-alert', 'error', '⚠️ Error de conexión.');
