@@ -425,9 +425,9 @@ async function handleLogin(e) {
       return;
     }
 
-    localStorage.setItem('edutech_token', data.access_token);
+   localStorage.setItem('edutech_token', data.access_token);
+    localStorage.setItem('sb-wazdaohczeqrrpfzjgcs-auth-token', JSON.stringify(data));
     window.location.href = 'dashboard.html';
-
   } catch (err) {
     showAlert('login-alert', 'error', '⚠️ Error de conexión.');
     setLoading('login-btn', false);
