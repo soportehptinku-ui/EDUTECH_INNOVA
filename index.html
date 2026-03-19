@@ -1589,7 +1589,9 @@ footer {
       <div class="comm-mock" aria-hidden="true">
         <div class="comm-mock-header">
           <span class="comm-mock-title">Comunidad — Colegio San Martin</span>
-          <span class="comm-mock-count">128 padres activos</span>
+<span class="comm-mock-count">
+  <span id="contador-padres">0</span> padres activos
+</span>
         </div>
 
         <div class="comm-post">
@@ -2021,6 +2023,36 @@ try { // <--- EMPIEZA CON UN SOLO TRY
       }
     });
   });
+   <script>
+  // Animación contador "padres activos"
+  function animarContador(id, objetivo, duracion) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let inicio = 0;
+    const paso = Math.ceil(objetivo / (duracion / 16));
+    const intervalo = setInterval(() => {
+      inicio += paso;
+      if (inicio >= objetivo) {
+        el.textContent = objetivo;
+        clearInterval(intervalo);
+      } else {
+        el.textContent = inicio;
+      }
+    }, 16);
+  }
+
+  // Observer para activar solo cuando sea visible
+  const observador = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animarContador('contador-padres', 128, 1500);
+        observador.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const contEl = document.getElementById('contador-padres');
+  if (contEl) observador.observe(contEl.closest('.comm-mock') || contEl);
 </script>
 </body>
 </html>
