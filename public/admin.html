@@ -198,6 +198,7 @@
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 0.75rem;
   }
 
   .table-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
@@ -238,6 +239,20 @@
   .s-cancelado { background:rgba(255,77,77,0.1); color:var(--error); }
   .s-cancelado::before { background:var(--error); }
 
+  /* INST STATUS BADGES */
+  .inst-status {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.2rem 0.6rem; border-radius: 100px;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+  }
+  .inst-status::before { content:''; width:5px; height:5px; border-radius:50%; }
+  .inst-status.activo { background:rgba(0,201,177,0.12); color:var(--mint); }
+  .inst-status.activo::before { background:var(--mint); }
+  .inst-status.pendiente { background:rgba(255,184,48,0.12); color:var(--warning); }
+  .inst-status.pendiente::before { background:var(--warning); }
+  .inst-status.inactivo { background:rgba(255,77,77,0.1); color:var(--error); }
+  .inst-status.inactivo::before { background:var(--error); }
+
   .action-btn {
     padding: 0.3rem 0.7rem; border-radius: 6px;
     font-size: 0.72rem; font-weight: 600;
@@ -263,6 +278,14 @@
   }
   .btn-cancel:hover { background: rgba(255,77,77,0.2); }
 
+  .btn-primary {
+    background: var(--mint); border: none;
+    color: var(--dark); padding: 0.5rem 1.2rem;
+    border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
   /* MODAL */
   .modal-overlay {
     position: fixed; inset: 0;
@@ -273,8 +296,9 @@
 
   .modal {
     background: var(--dark); border: 1px solid var(--border);
-    border-radius: 20px; padding: 2rem; width: 100%; max-width: 500px;
+    border-radius: 20px; padding: 2rem; width: 100%; max-width: 520px;
     margin: 1rem; position: relative; animation: slideUp 0.3s ease;
+    max-height: 90vh; overflow-y: auto;
   }
 
   @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
@@ -285,6 +309,7 @@
     background:none; border:none; color:rgba(255,255,255,0.3);
     font-size:1.2rem; cursor:pointer;
   }
+  .modal-close:hover { color: var(--white); }
 
   .detail-row {
     display:flex; justify-content:space-between; align-items:center;
@@ -293,29 +318,29 @@
   }
   .detail-row:last-of-type { border-bottom:none; }
   .detail-key { color:rgba(255,255,255,0.4); }
-  .detail-val { font-weight:500; }
+  .detail-val { font-weight:500; text-align:right; max-width:60%; }
 
-  /* INSTITUCIONES TAB */
-  .inst-grid {
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:1rem;
+  /* FORM */
+  .form-group { margin-bottom: 1rem; }
+  .form-label { display:block; font-size:0.75rem; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.5px; }
+  .form-input, .form-select {
+    width:100%; background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px; padding:0.6rem 0.9rem;
+    color:var(--white); font-size:0.875rem; outline:none;
+    transition:border-color 0.2s; font-family:'DM Sans',sans-serif;
   }
+  .form-input:focus, .form-select:focus { border-color:var(--mint); }
+  .form-input::placeholder { color:rgba(255,255,255,0.2); }
+  .form-select option { background:var(--dark); color:var(--white); }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
 
-  .inst-card {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:12px; padding:1.25rem;
-    transition:all 0.2s;
+  /* INSTITUCIONES TABLE */
+  .inst-empty {
+    text-align:center; padding:3rem;
+    color:rgba(255,255,255,0.3);
   }
-  .inst-card:hover { border-color:rgba(0,201,177,0.3); transform:translateY(-2px); }
-
-  .inst-name { font-family:'Syne',sans-serif; font-weight:700; margin-bottom:0.25rem; }
-  .inst-plan {
-    display:inline-block;
-    background:rgba(0,201,177,0.1); color:var(--mint);
-    font-size:0.7rem; font-weight:700; text-transform:uppercase;
-    padding:0.15rem 0.5rem; border-radius:4px; margin-bottom:0.75rem;
-  }
-  .inst-meta { font-size:0.8rem; color:rgba(255,255,255,0.4); line-height:1.7; }
+  .inst-empty p { margin-top:0.5rem; font-size:0.875rem; }
 
   /* TOAST */
   .alert-toast {
@@ -326,11 +351,24 @@
     transform:translateY(100px); opacity:0;
     transition:all 0.4s; z-index:999;
     box-shadow:0 10px 40px rgba(0,0,0,0.4);
+    max-width:320px;
   }
   .alert-toast.show { transform:translateY(0); opacity:1; }
+  .alert-toast.error { border-color:var(--error); color:var(--error); }
+
+  /* LOADING */
+  .loading-spinner {
+    display:inline-block; width:16px; height:16px;
+    border:2px solid rgba(0,201,177,0.2);
+    border-top-color:var(--mint);
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    margin-right:0.5rem; vertical-align:middle;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
 
   @media(max-width:1200px) { .stats-row { grid-template-columns:repeat(3,1fr); } }
-  @media(max-width:768px) { .sidebar{display:none;} .main{margin-left:0;} }
+  @media(max-width:768px) { .sidebar{display:none;} .main{margin-left:0;} .form-row{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -340,13 +378,13 @@
   <div class="admin-badge">🔑 Admin</div>
 
   <div class="sidebar-section">Gestión</div>
-  <button class="nav-item active" onclick="switchAdminView('pedidos')">
+  <button class="nav-item active" data-view="pedidos" onclick="switchAdminView('pedidos')">
     <span class="nav-icon">📦</span> Todos los pedidos
   </button>
-  <button class="nav-item" onclick="switchAdminView('instituciones')">
+  <button class="nav-item" data-view="instituciones" onclick="switchAdminView('instituciones')">
     <span class="nav-icon">🏫</span> Instituciones
   </button>
-  <button class="nav-item" onclick="switchAdminView('metricas')">
+  <button class="nav-item" data-view="metricas" onclick="switchAdminView('metricas')">
     <span class="nav-icon">📊</span> Métricas
   </button>
 
@@ -375,26 +413,27 @@
     <div class="stats-row">
       <div class="stat-card white">
         <div class="stat-label">Total pedidos</div>
-        <div class="stat-value white" id="admin-total">8</div>
+        <div class="stat-value white" id="admin-total">—</div>
       </div>
       <div class="stat-card orange">
         <div class="stat-label">Pendientes</div>
-        <div class="stat-value orange" id="admin-pendientes">3</div>
+        <div class="stat-value orange" id="admin-pendientes">—</div>
       </div>
       <div class="stat-card orange">
         <div class="stat-label">En proceso</div>
-        <div class="stat-value orange" id="admin-proceso">2</div>
+        <div class="stat-value orange" id="admin-proceso">—</div>
       </div>
       <div class="stat-card green">
         <div class="stat-label">Entregados</div>
-        <div class="stat-value green" id="admin-entregados">3</div>
+        <div class="stat-value green" id="admin-entregados">—</div>
       </div>
       <div class="stat-card blue">
         <div class="stat-label">Instituciones</div>
-        <div class="stat-value" style="color:var(--teal);" id="admin-instituciones">4</div>
+        <div class="stat-value" style="color:var(--teal);" id="admin-instituciones">—</div>
       </div>
     </div>
 
+    <!-- VISTA: PEDIDOS -->
     <div id="admin-view-pedidos">
       <div class="filters-bar">
         <button class="filter-btn active" onclick="filterOrders('todos', this)">Todos</button>
@@ -403,30 +442,105 @@
         <button class="filter-btn" onclick="filterOrders('entregado', this)">Entregados</button>
         <input class="search-input" type="text" placeholder="🔍 Buscar institución..." oninput="searchOrders(this.value)">
       </div>
-
       <div class="table-card">
         <div class="table-header">
           <div class="table-title">Pedidos de impresión</div>
-          <div style="font-size:0.8rem;color:rgba(255,255,255,0.3);" id="order-count">8 pedidos</div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.3);" id="order-count">— pedidos</div>
         </div>
-        <div id="admin-orders-container"></div>
+        <div id="admin-orders-container">
+          <div class="inst-empty">
+            <span class="loading-spinner"></span> Cargando pedidos...
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- VISTA: INSTITUCIONES -->
     <div id="admin-view-instituciones" style="display:none;">
-      <div class="inst-grid" id="inst-grid-container"></div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">🏫 Instituciones registradas</div>
+          <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+            <input class="search-input" type="text" placeholder="🔍 Buscar institución..." oninput="searchInstituciones(this.value)" style="width:200px;">
+            <button class="btn-primary" onclick="openAgregarModal()">+ Agregar institución</button>
+            <button onclick="cargarInstituciones()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);padding:0.5rem 0.9rem;border-radius:8px;font-size:0.8rem;cursor:pointer;" title="Recargar desde Supabase">🔄 Actualizar</button>
+          </div>
+        </div>
+        <div id="inst-table-container">
+          <div class="inst-empty">
+            <span class="loading-spinner"></span> Cargando instituciones...
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- VISTA: MÉTRICAS -->
     <div id="admin-view-metricas" style="display:none;">
       <div id="metrics-grid-container"></div>
     </div>
 
-  </div></div><div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  </div>
+</div>
+
+<!-- MODAL DETALLE PEDIDO / INSTITUCIÓN -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
-    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('show')">✕</button>
-    <div class="modal-title" id="modal-title">Detalle del pedido</div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Detalle</div>
     <div id="modal-content"></div>
     <div style="display:flex;gap:0.75rem;margin-top:1.5rem;" id="modal-actions"></div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR INSTITUCIÓN -->
+<div class="modal-overlay" id="modal-agregar" onclick="closeAgregarModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeAgregarModal()">✕</button>
+    <div class="modal-title">➕ Agregar institución</div>
+    <div id="form-error" style="display:none;background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.2);color:var(--error);padding:0.75rem;border-radius:8px;font-size:0.8rem;margin-bottom:1rem;"></div>
+
+    <div class="form-group">
+      <label class="form-label">Nombre de la institución *</label>
+      <input class="form-input" id="f-nombre" type="text" placeholder="Ej: Colegio San Martín">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Responsable *</label>
+        <input class="form-input" id="f-responsable" type="text" placeholder="Nombre completo">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cargo</label>
+        <input class="form-input" id="f-cargo" type="text" placeholder="Ej: Director">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Teléfono</label>
+        <input class="form-input" id="f-telefono" type="tel" placeholder="+51 999 000 111">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Plan</label>
+        <select class="form-select" id="f-plan">
+          <option value="BASIC">BASIC</option>
+          <option value="START">START</option>
+          <option value="PRO">PRO</option>
+          <option value="GOLD">GOLD</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="f-email" type="email" placeholder="contacto@colegio.pe">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Dirección</label>
+      <input class="form-input" id="f-direccion" type="text" placeholder="Av. Principal 123, Lima">
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+      <button onclick="closeAgregarModal()" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);padding:0.65rem;border-radius:8px;font-size:0.875rem;cursor:pointer;">Cancelar</button>
+      <button class="btn-primary" id="btn-guardar" onclick="guardarInstitucion()" style="flex:2;">Guardar institución</button>
+    </div>
   </div>
 </div>
 
@@ -436,64 +550,373 @@
 // =============================================
 // CONFIGURACIÓN SUPABASE
 // =============================================
-const SUPABASE_URL = 'https://wazdaohczeqrrpfzjgcs.supabase.co';
+const SUPABASE_URL      = 'https://wazdaohczeqrrpfzjgcs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhemRhb2hjemVxcnJwZnpqZ2NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NzYzMzEsImV4cCI6MjA4ODI1MjMzMX0.MsieEfEnBNCl7koLxAeLsLbaIVuhIFAipd2076acGzU';
 
-// Auth check
+// =============================================
+// AUTH CHECK
+// =============================================
 const token = localStorage.getItem('edutech_token');
-if (!token) window.location.href = 'login.html';
+// ⚠️ IMPORTANTE: Si usas Supabase Auth, el token real está aquí:
+// const token = localStorage.getItem('sb-wazdaohczeqrrpfzjgcs-auth-token');
+// Comenta/descomenta según cómo guardes el token en tu login
+if (!token) {
+  // window.location.href = 'login.html'; // Descomenta en producción
+  console.warn('Sin token — modo demo activo');
+}
 
-// Date
-document.getElementById('today-date').textContent = new Date().toLocaleDateString('es-PE', { day:'2-digit', month:'long', year:'numeric' });
+// El Bearer token real para llamadas autenticadas (si el admin inicia sesión con Supabase Auth)
+function getAuthToken() {
+  // Intenta obtener el token de sesión de Supabase
+  const sbToken = localStorage.getItem('sb-wazdaohczeqrrpfzjgcs-auth-token');
+  if (sbToken) {
+    try {
+      const parsed = JSON.parse(sbToken);
+      return parsed?.access_token || SUPABASE_ANON_KEY;
+    } catch { return SUPABASE_ANON_KEY; }
+  }
+  return SUPABASE_ANON_KEY;
+}
+
+// =============================================
+// FECHA
+// =============================================
+document.getElementById('today-date').textContent = new Date().toLocaleDateString('es-PE', {
+  day:'2-digit', month:'long', year:'numeric'
+});
 
 // =============================================
 // DATA & STATE
 // =============================================
 let allOrders = [
-  { id: '#001', institucion: 'Colegio San Martín', responsable: 'María Torres', plan: 'GOLD', archivo: 'Examen_Mat_3A.pdf', tipo: 'B&N', copias: 35, paginas: 105, estado: 'entregado', fecha: '12 Ene', instrucciones: 'A doble cara' },
-  { id: '#002', institucion: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', plan: 'PRO', archivo: 'Fichas_Lectura_Sem4.pdf', tipo: 'Color', copias: 10, paginas: 80, estado: 'proceso', fecha: '14 Ene', instrucciones: '' },
-  { id: '#003', institucion: 'Colegio San Martín', responsable: 'María Torres', plan: 'GOLD', archivo: 'Cuestionario_Ciencias.pdf', tipo: 'B&N', copias: 30, paginas: 60, estado: 'pendiente', fecha: '15 Ene', instrucciones: 'Urgente' },
-  { id: '#004', institucion: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', plan: 'START', archivo: 'Practica_Fisica.pdf', tipo: 'B&N', copias: 25, paginas: 50, estado: 'pendiente', fecha: '15 Ene', instrucciones: '' },
-  { id: '#005', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', cargo: 'Directora', archivo: 'Manualidad_Mes_Enero.pdf', tipo: 'Color', copias: 20, paginas: 20, estado: 'proceso', fecha: '16 Ene', instrucciones: 'Papel grueso' },
-  { id: '#006', institucion: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', plan: 'PRO', archivo: 'Examen_Semestral_Admin.pdf', tipo: 'B&N', copias: 60, paginas: 180, estado: 'entregado', fecha: '10 Ene', instrucciones: '' },
-  { id: '#007', institucion: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', plan: 'START', archivo: 'Simulacro_Premedica.pdf', tipo: 'B&N', copias: 40, paginas: 120, estado: 'pendiente', fecha: '16 Ene', instrucciones: '' },
-  { id: '#008', institucion: 'Nido Los Girasoles', responsable: 'Ana Lima', archivo: 'Circulares_Padres.pdf', tipo: 'B&N', copias: 50, paginas: 50, estado: 'entregado', fecha: '11 Ene', instrucciones: '' },
+  { id:'#001', institucion:'Colegio San Martín',         responsable:'María Torres',  plan:'GOLD',  archivo:'Examen_Mat_3A.pdf',          tipo:'B&N',   copias:35, paginas:105, estado:'entregado', fecha:'12 Ene', instrucciones:'A doble cara' },
+  { id:'#002', institucion:'Instituto Superior ISTP',    responsable:'Carlos Ríos',   plan:'PRO',   archivo:'Fichas_Lectura_Sem4.pdf',     tipo:'Color', copias:10, paginas:80,  estado:'proceso',   fecha:'14 Ene', instrucciones:'' },
+  { id:'#003', institucion:'Colegio San Martín',         responsable:'María Torres',  plan:'GOLD',  archivo:'Cuestionario_Ciencias.pdf',   tipo:'B&N',   copias:30, paginas:60,  estado:'pendiente', fecha:'15 Ene', instrucciones:'Urgente' },
+  { id:'#004', institucion:'Academia Preuniversitaria',  responsable:'Luis Mendoza',  plan:'START', archivo:'Practica_Fisica.pdf',         tipo:'B&N',   copias:25, paginas:50,  estado:'pendiente', fecha:'15 Ene', instrucciones:'' },
+  { id:'#005', institucion:'Nido Los Girasoles',         responsable:'Ana Lima',      plan:'BASIC', archivo:'Manualidad_Enero.pdf',        tipo:'Color', copias:20, paginas:20,  estado:'proceso',   fecha:'16 Ene', instrucciones:'Papel grueso' },
+  { id:'#006', institucion:'Instituto Superior ISTP',    responsable:'Carlos Ríos',   plan:'PRO',   archivo:'Examen_Semestral_Admin.pdf',  tipo:'B&N',   copias:60, paginas:180, estado:'entregado', fecha:'10 Ene', instrucciones:'' },
+  { id:'#007', institucion:'Academia Preuniversitaria',  responsable:'Luis Mendoza',  plan:'START', archivo:'Simulacro_Premedica.pdf',     tipo:'B&N',   copias:40, paginas:120, estado:'pendiente', fecha:'16 Ene', instrucciones:'' },
+  { id:'#008', institucion:'Nido Los Girasoles',         responsable:'Ana Lima',      plan:'BASIC', archivo:'Circulares_Padres.pdf',       tipo:'B&N',   copias:50, paginas:50,  estado:'entregado', fecha:'11 Ene', instrucciones:'' },
 ];
 
-const institucionesDemo = [
-  { nombre: 'Colegio San Martín', responsable: 'María Torres', cargo: 'Directora', plan: 'GOLD', pedidos: 2, telefono: '+51 999 111 222' },
-  { nombre: 'Instituto Superior ISTP', responsable: 'Carlos Ríos', cargo: 'Administrador', plan: 'PRO', pedidos: 2, telefono: '+51 999 333 444' },
-  { nombre: 'Academia Preuniversitaria ABC', responsable: 'Luis Mendoza', cargo: 'Director', plan: 'START', pedidos: 2, telefono: '+51 999 555 666' },
-  { nombre: 'Nido Los Girasoles', responsable: 'Ana Lima', cargo: 'Directora', plan: 'BASIC', pedidos: 2, telefono: '+51 999 777 888' },
-];
-
-let institucionesReales = [];
+// Instituciones que vienen de Supabase
+let institucionesSupabase = [];
+let todasLasInstituciones = [];
+let instSearchQuery = '';
+let currentFilter  = 'todos';
+let currentSearch  = '';
 
 // =============================================
-// SUPABASE FETCH
+// SUPABASE — CARGAR INSTITUCIONES
 // =============================================
-async function obtenerNuevasInstituciones() {
-    try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/institucion?select=*`, {
-            headers: { 
-                'apikey': SUPABASE_ANON_KEY, 
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}` 
-            }
-        });
-        const data = await response.json();
-        if (Array.isArray(data)) {
-            institucionesReales = data.map(i => ({
-                nombre: i.nombre_institucion, 
-                responsable: i.nombre_responsable,
-                cargo: i.cargo || 'Directivo',
-                plan: i.plan || 'BASIC',
-                pedidos: 0,
-                telefono: i.telefono || ''
-            }));
-            renderInstituciones();
-            updateStats();
-        }
-    } catch (e) { console.error("Error cargando:", e); }
+async function cargarInstituciones() {
+  const container = document.getElementById('inst-table-container');
+  if (container) {
+    container.innerHTML = `<div class="inst-empty"><span class="loading-spinner"></span> Cargando desde Supabase...</div>`;
+  }
+
+  try {
+    // 🔑 FIX PRINCIPAL: usamos el token correcto en Authorization
+    const authToken = getAuthToken();
+
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/institucion?select=*&order=created_at.desc`, {
+      headers: {
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type':  'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      console.error('Supabase error:', err);
+      throw new Error(err.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Instituciones cargadas de Supabase:', data);
+
+    // ✅ Mapea los campos de tu tabla Supabase al formato del panel
+    // Ajusta los nombres de columna según tu tabla real en Supabase
+    institucionesSupabase = (Array.isArray(data) ? data : []).map(i => ({
+      id:           i.id            ?? i.institucion_id ?? null,
+      nombre:       i.nombre_institucion ?? i.nombre  ?? 'Sin nombre',
+      responsable:  i.nombre_responsable ?? i.responsable ?? '—',
+      cargo:        i.cargo         ?? 'Directivo',
+      plan:         i.plan          ?? 'BASIC',
+      telefono:     i.telefono      ?? '—',
+      email:        i.email         ?? '—',
+      direccion:    i.direccion     ?? '—',
+      estado:       i.estado        ?? 'activo',
+      created_at:   i.created_at    ?? null,
+      pedidos:      i.pedidos_count ?? 0,
+      fuente:       'supabase'
+    }));
+
+    todasLasInstituciones = [...institucionesSupabase];
+    renderInstTable(todasLasInstituciones);
+    updateStats();
+    showToast(`✅ ${institucionesSupabase.length} institución(es) cargada(s)`);
+
+  } catch (e) {
+    console.error('Error cargando instituciones:', e);
+    showToast('❌ Error al cargar: ' + e.message, true);
+
+    if (container) {
+      container.innerHTML = `
+        <div class="inst-empty">
+          <div style="font-size:1.5rem;">⚠️</div>
+          <p style="margin-top:0.5rem;color:var(--error);">Error al conectar con Supabase</p>
+          <p style="font-size:0.75rem;margin-top:0.25rem;opacity:0.6;">${e.message}</p>
+          <button onclick="cargarInstituciones()" class="btn-primary" style="margin-top:1rem;">Reintentar</button>
+        </div>`;
+    }
+  }
+}
+
+// =============================================
+// RENDER TABLA INSTITUCIONES
+// =============================================
+function renderInstTable(lista) {
+  const container = document.getElementById('inst-table-container');
+  if (!container) return;
+
+  if (!lista || lista.length === 0) {
+    container.innerHTML = `
+      <div class="inst-empty">
+        <div style="font-size:2rem;">🏫</div>
+        <p>No hay instituciones registradas aún</p>
+        <p style="font-size:0.75rem;margin-top:0.4rem;opacity:0.5;">Agrega la primera con el botón "Agregar institución"</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Institución</th>
+          <th>Responsable</th>
+          <th>Plan</th>
+          <th>Contacto</th>
+          <th>Estado</th>
+          <th>Registro</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${lista.map(inst => {
+          const estadoCls = inst.estado === 'activo' ? 'activo' : inst.estado === 'pendiente' ? 'pendiente' : 'inactivo';
+          const estadoLabel = inst.estado === 'activo' ? '● Activo' : inst.estado === 'pendiente' ? '○ Pendiente' : '✕ Inactivo';
+          const fecha = inst.created_at
+            ? new Date(inst.created_at).toLocaleDateString('es-PE', {day:'2-digit', month:'short', year:'numeric'})
+            : '—';
+          return `
+          <tr>
+            <td>
+              <div style="font-weight:600;">${escHtml(inst.nombre)}</div>
+              <div style="font-size:0.73rem;color:rgba(255,255,255,0.35);">${escHtml(inst.direccion)}</div>
+            </td>
+            <td>
+              <div style="font-weight:500;">${escHtml(inst.responsable)}</div>
+              <div style="font-size:0.73rem;color:rgba(255,255,255,0.35);">${escHtml(inst.cargo)}</div>
+            </td>
+            <td>
+              <span style="background:rgba(0,201,177,0.1);color:var(--mint);font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;">
+                ${escHtml(inst.plan)}
+              </span>
+            </td>
+            <td>
+              <div style="font-size:0.8rem;">📱 ${escHtml(inst.telefono)}</div>
+              <div style="font-size:0.73rem;color:rgba(255,255,255,0.35);">✉ ${escHtml(inst.email)}</div>
+            </td>
+            <td><span class="inst-status ${estadoCls}">${estadoLabel}</span></td>
+            <td style="font-size:0.78rem;color:rgba(255,255,255,0.4);">${fecha}</td>
+            <td>
+              <button class="action-btn btn-confirm" onclick="verInstitucion(${JSON.stringify(inst).replace(/"/g,'&quot;')})">Ver</button>
+              ${inst.fuente === 'supabase' && inst.estado !== 'activo'
+                ? `<button class="action-btn btn-deliver" onclick="activarInstitucion('${inst.id}')">✓ Activar</button>`
+                : ''}
+              ${inst.fuente === 'supabase'
+                ? `<button class="action-btn btn-cancel" onclick="eliminarInstitucion('${inst.id}', '${escHtml(inst.nombre)}')">Eliminar</button>`
+                : ''}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+}
+
+// =============================================
+// BUSCAR INSTITUCIONES
+// =============================================
+function searchInstituciones(q) {
+  instSearchQuery = q.toLowerCase();
+  const filtradas = instSearchQuery
+    ? todasLasInstituciones.filter(i =>
+        i.nombre.toLowerCase().includes(instSearchQuery) ||
+        i.responsable.toLowerCase().includes(instSearchQuery))
+    : todasLasInstituciones;
+  renderInstTable(filtradas);
+}
+
+// =============================================
+// VER DETALLE INSTITUCIÓN
+// =============================================
+function verInstitucion(inst) {
+  document.getElementById('modal-title').textContent = '🏫 ' + inst.nombre;
+  document.getElementById('modal-content').innerHTML = `
+    <div class="detail-row"><span class="detail-key">Responsable</span><span class="detail-val">${escHtml(inst.responsable)} · ${escHtml(inst.cargo)}</span></div>
+    <div class="detail-row"><span class="detail-key">Plan</span><span class="detail-val">${escHtml(inst.plan)}</span></div>
+    <div class="detail-row"><span class="detail-key">Teléfono</span><span class="detail-val">${escHtml(inst.telefono)}</span></div>
+    <div class="detail-row"><span class="detail-key">Email</span><span class="detail-val">${escHtml(inst.email)}</span></div>
+    <div class="detail-row"><span class="detail-key">Dirección</span><span class="detail-val">${escHtml(inst.direccion)}</span></div>
+    <div class="detail-row"><span class="detail-key">Estado</span><span class="detail-val">${escHtml(inst.estado ?? '—')}</span></div>
+  `;
+  document.getElementById('modal-actions').innerHTML = inst.telefono && inst.telefono !== '—'
+    ? `<a href="https://wa.me/${inst.telefono.replace(/\D/g,'')}" target="_blank" class="btn-primary" style="text-decoration:none;text-align:center;padding:0.6rem 1rem;">📱 WhatsApp</a>`
+    : '';
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+// =============================================
+// AGREGAR INSTITUCIÓN → SUPABASE
+// =============================================
+function openAgregarModal() {
+  // Limpiar formulario
+  ['f-nombre','f-responsable','f-cargo','f-telefono','f-email','f-direccion'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-plan').value = 'BASIC';
+  document.getElementById('form-error').style.display = 'none';
+  document.getElementById('btn-guardar').disabled = false;
+  document.getElementById('btn-guardar').textContent = 'Guardar institución';
+  document.getElementById('modal-agregar').classList.add('show');
+}
+
+function closeAgregarModal(e) {
+  if (!e || e.target === document.getElementById('modal-agregar')) {
+    document.getElementById('modal-agregar').classList.remove('show');
+  }
+}
+
+async function guardarInstitucion() {
+  const nombre      = document.getElementById('f-nombre').value.trim();
+  const responsable = document.getElementById('f-responsable').value.trim();
+  const cargo       = document.getElementById('f-cargo').value.trim();
+  const telefono    = document.getElementById('f-telefono').value.trim();
+  const email       = document.getElementById('f-email').value.trim();
+  const plan        = document.getElementById('f-plan').value;
+  const direccion   = document.getElementById('f-direccion').value.trim();
+
+  const errEl = document.getElementById('form-error');
+  errEl.style.display = 'none';
+
+  if (!nombre) {
+    errEl.textContent = '⚠️ El nombre de la institución es obligatorio.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!responsable) {
+    errEl.textContent = '⚠️ El nombre del responsable es obligatorio.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('btn-guardar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span> Guardando...';
+
+  // ✅ Ajusta los nombres de columna según tu tabla en Supabase
+  const payload = {
+    nombre_institucion:  nombre,
+    nombre_responsable:  responsable,
+    cargo:               cargo   || null,
+    telefono:            telefono || null,
+    email:               email    || null,
+    plan:                plan,
+    direccion:           direccion || null,
+    estado:              'activo'
+  };
+
+  try {
+    const authToken = getAuthToken();
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/institucion`, {
+      method: 'POST',
+      headers: {
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type':  'application/json',
+        'Prefer':        'return=representation'   // ← devuelve el registro creado
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      console.error('Error Supabase INSERT:', err);
+      throw new Error(err.message || err.details || `HTTP ${response.status}`);
+    }
+
+    const created = await response.json();
+    console.log('Institución creada:', created);
+
+    closeAgregarModal();
+    showToast(`✅ Institución "${nombre}" agregada correctamente`);
+    await cargarInstituciones();   // recarga la tabla desde Supabase
+
+  } catch (e) {
+    console.error('Error guardando:', e);
+    errEl.textContent = '❌ Error al guardar: ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Guardar institución';
+  }
+}
+
+// =============================================
+// ACTIVAR INSTITUCIÓN
+// =============================================
+async function activarInstitucion(id) {
+  try {
+    const authToken = getAuthToken();
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/institucion?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type':  'application/json'
+      },
+      body: JSON.stringify({ estado: 'activo' })
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    showToast('✅ Institución activada');
+    await cargarInstituciones();
+  } catch (e) {
+    showToast('❌ Error al activar: ' + e.message, true);
+  }
+}
+
+// =============================================
+// ELIMINAR INSTITUCIÓN
+// =============================================
+async function eliminarInstitucion(id, nombre) {
+  if (!confirm(`¿Eliminar "${nombre}"?\nEsta acción no se puede deshacer.`)) return;
+  try {
+    const authToken = getAuthToken();
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/institucion?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${authToken}`
+      }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    showToast(`🗑️ Institución eliminada`);
+    await cargarInstituciones();
+  } catch (e) {
+    showToast('❌ Error al eliminar: ' + e.message, true);
+  }
 }
 
 // =============================================
@@ -503,131 +926,37 @@ function switchAdminView(view) {
   ['pedidos','instituciones','metricas'].forEach(v => {
     document.getElementById(`admin-view-${v}`).style.display = v === view ? 'block' : 'none';
   });
-  document.querySelectorAll('.nav-item').forEach((btn, i) => {
-    const labels = ['pedidos','instituciones','metricas'];
-    btn.classList.toggle('active', btn.textContent.trim().toLowerCase().includes(labels[i]));
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === view);
   });
-  const titles = { pedidos:'Todos los pedidos', instituciones:'Instituciones', metricas:'Métricas del negocio' };
+  const titles = {
+    pedidos:       'Todos los pedidos',
+    instituciones: 'Instituciones',
+    metricas:      'Métricas del negocio'
+  };
   document.getElementById('admin-topbar-title').textContent = titles[view];
-  
-  if (view === 'instituciones') renderInstituciones();
-  if (view === 'metricas') renderMetricas();
-}
 
-// =============================================
-// RENDER INSTITUCIONES
-// =============================================
-function renderInstituciones() {
-  const listaTotal = [...institucionesDemo, ...institucionesReales];
-  const container = document.getElementById('inst-grid-container');
-  if(!container) return;
-
-  container.innerHTML = listaTotal.map(inst => `
-    <div class="inst-card">
-      <div class="inst-name">${inst.nombre}</div>
-      <div class="inst-plan">${inst.plan}</div>
-      <div class="inst-meta">
-        👤 ${inst.responsable} · ${inst.cargo}<br>
-        📱 ${inst.telefono}<br>
-        📦 ${inst.pedidos} pedidos realizados
-      </div>
-      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
-        <a href="https://wa.me/${inst.telefono.replace(/\D/g,'')}" target="_blank" style="flex:1;text-align:center;padding:0.4rem;background:rgba(0,201,177,0.1);border:1px solid rgba(0,201,177,0.2);color:var(--mint);border-radius:6px;font-size:0.75rem;text-decoration:none;font-weight:600;">WhatsApp</a>
-        <button onclick="showToast('Ver pedidos de: ${inst.nombre}')" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border-radius:6px;font-size:0.75rem;cursor:pointer;">Ver pedidos</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// =============================================
-// RENDER MÉTRICAS (Corregido)
-// =============================================
-function renderMetricas() {
-  const totalInst = institucionesDemo.length + institucionesReales.length;
-  const container = document.getElementById('metrics-grid-container');
-  
-  container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Ingresos este mes</div>
-          <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--mint);">S/ 8,608</div>
-          <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:0.4rem;">Proyección M1-3</div>
-          <div style="margin-top:1.5rem;display:flex;gap:1.5rem;">
-            <div>
-              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">MRR</div>
-              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);">S/ 5,990</div>
-            </div>
-            <div>
-              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Instituciones</div>
-              <div style="font-family:'Syne',sans-serif;font-weight:700;">${totalInst}</div>
-            </div>
-            <div>
-              <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">EBITDA</div>
-              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--error);">-S/27,573</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Proyección 24 meses</div>
-          <div style="display:flex;flex-direction:column;gap:0.6rem;">
-              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
-                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M1-3</span>
-                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 8,608</span>
-                <span style="font-size:0.75rem;font-weight:700;color:var(--error);">Inversión</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
-                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M10-12</span>
-                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 98,532</span>
-                <span style="font-size:0.75rem;font-weight:700;color:var(--mint);">✓ EBITDA+</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
-                <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M22-24</span>
-                <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 245,014</span>
-                <span style="font-size:0.75rem;font-weight:700;color:var(--mint);">✓ EBITDA+</span>
-              </div>
-          </div>
-        </div>
-
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
-          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Unit Economics</div>
-            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">LTV Neto</span>
-              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">S/ 39,034</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Payback</span>
-              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">1.04 meses</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
-              <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Churn mensual</span>
-              <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">3%</span>
-            </div>
-        </div>
-    </div>
-  `;
+  if (view === 'instituciones') cargarInstituciones();
+  if (view === 'metricas')      renderMetricas();
 }
 
 // =============================================
 // PEDIDOS & TABLA
 // =============================================
-let currentFilter = 'todos';
-let currentSearch = '';
-
 function renderOrdersTable(orders) {
   const container = document.getElementById('admin-orders-container');
   document.getElementById('order-count').textContent = `${orders.length} pedido${orders.length !== 1 ? 's' : ''}`;
 
   if (!orders.length) {
-    container.innerHTML = `<div style="text-align:center;padding:3rem;color:rgba(255,255,255,0.3);">📭<p>No hay pedidos</p></div>`;
+    container.innerHTML = `<div class="inst-empty">📭<p>No hay pedidos</p></div>`;
     return;
   }
 
   const statusMap = {
-    entregado: ['s-entregado', '✓ Entregado'],
-    proceso: ['s-proceso', '⏳ En proceso'],
-    pendiente: ['s-pendiente', '○ Pendiente'],
-    cancelado: ['s-cancelado', '✕ Cancelado'],
+    entregado: ['s-entregado','✓ Entregado'],
+    proceso:   ['s-proceso',  '⏳ En proceso'],
+    pendiente: ['s-pendiente','○ Pendiente'],
+    cancelado: ['s-cancelado','✕ Cancelado'],
   };
 
   container.innerHTML = `
@@ -638,21 +967,23 @@ function renderOrdersTable(orders) {
           const [cls, label] = statusMap[o.estado] || ['s-pendiente', o.estado];
           return `<tr>
             <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);cursor:pointer;" onclick="showOrderDetail('${o.id}')">${o.id}</td>
-            <td><div style="font-weight:500;">${o.institucion}</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">${o.responsable}</div></td>
-            <td><span style="background:rgba(0,201,177,0.1);color:var(--mint);font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;">${o.plan || 'BASIC'}</span></td>
-            <td style="font-size:0.8rem;">📄 ${o.archivo}</td>
+            <td>
+              <div style="font-weight:500;">${escHtml(o.institucion)}</div>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">${escHtml(o.responsable)}</div>
+            </td>
+            <td><span style="background:rgba(0,201,177,0.1);color:var(--mint);font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;">${o.plan||'BASIC'}</span></td>
+            <td style="font-size:0.8rem;">📄 ${escHtml(o.archivo)}</td>
             <td>${o.tipo}</td><td>${o.copias}</td><td>${o.paginas}</td>
             <td><span class="status-badge ${cls}">${label}</span></td>
             <td style="color:rgba(255,255,255,0.4);font-size:0.8rem;">${o.fecha}</td>
             <td>
-              ${o.estado === 'pendiente' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${o.id}','proceso')">▶ Iniciar</button>` : ''}
-              ${o.estado === 'proceso' ? `<button class="action-btn btn-deliver" onclick="updateStatus('${o.id}','entregado')">✓ Entregar</button>` : ''}
+              ${o.estado==='pendiente' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${o.id}','proceso')">▶ Iniciar</button>`:''}
+              ${o.estado==='proceso'   ? `<button class="action-btn btn-deliver" onclick="updateStatus('${o.id}','entregado')">✓ Entregar</button>`:''}
             </td>
           </tr>`;
         }).join('')}
       </tbody>
-    </table>
-  `;
+    </table>`;
 }
 
 function filterOrders(filter, btn) {
@@ -680,45 +1011,130 @@ function updateStatus(id, newStatus) {
 }
 
 function updateStats() {
-  const totalInst = institucionesDemo.length + institucionesReales.length;
-  document.getElementById('admin-total').textContent = allOrders.length;
-  document.getElementById('admin-pendientes').textContent = allOrders.filter(o=>o.estado==='pendiente').length;
-  document.getElementById('admin-proceso').textContent = allOrders.filter(o=>o.estado==='proceso').length;
-  document.getElementById('admin-entregados').textContent = allOrders.filter(o=>o.estado==='entregado').length;
-  document.getElementById('admin-instituciones').textContent = totalInst;
+  document.getElementById('admin-total').textContent       = allOrders.length;
+  document.getElementById('admin-pendientes').textContent  = allOrders.filter(o=>o.estado==='pendiente').length;
+  document.getElementById('admin-proceso').textContent     = allOrders.filter(o=>o.estado==='proceso').length;
+  document.getElementById('admin-entregados').textContent  = allOrders.filter(o=>o.estado==='entregado').length;
+  document.getElementById('admin-instituciones').textContent = institucionesSupabase.length;
 }
 
 // =============================================
-// MODAL & UTILS
+// MODAL PEDIDO
 // =============================================
 function showOrderDetail(id) {
   const o = allOrders.find(x => x.id === id);
   if (!o) return;
   document.getElementById('modal-title').textContent = `Pedido ${o.id}`;
   document.getElementById('modal-content').innerHTML = `
-    <div class="detail-row"><span class="detail-key">Institución</span><span class="detail-val">${o.institucion}</span></div>
-    <div class="detail-row"><span class="detail-key">Archivo</span><span class="detail-val">${o.archivo}</span></div>
-    <div class="detail-row"><span class="detail-key">Instrucciones</span><span class="detail-val">${o.instrucciones || 'Ninguna'}</span></div>
+    <div class="detail-row"><span class="detail-key">Institución</span><span class="detail-val">${escHtml(o.institucion)}</span></div>
+    <div class="detail-row"><span class="detail-key">Archivo</span><span class="detail-val">${escHtml(o.archivo)}</span></div>
+    <div class="detail-row"><span class="detail-key">Instrucciones</span><span class="detail-val">${escHtml(o.instrucciones || 'Ninguna')}</span></div>
+    <div class="detail-row"><span class="detail-key">Copias</span><span class="detail-val">${o.copias}</span></div>
+    <div class="detail-row"><span class="detail-key">Páginas</span><span class="detail-val">${o.paginas}</span></div>
   `;
+  document.getElementById('modal-actions').innerHTML = '';
   document.getElementById('modal-overlay').classList.add('show');
 }
 
-function closeModal(e) { if (!e || e.target.classList.contains('modal-overlay')) document.getElementById('modal-overlay').classList.remove('show'); }
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('show');
+  }
 }
 
-function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+// =============================================
+// MÉTRICAS
+// =============================================
+function renderMetricas() {
+  const totalInst = institucionesSupabase.length;
+  const container = document.getElementById('metrics-grid-container');
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Ingresos este mes</div>
+        <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--mint);">S/ 8,608</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:0.4rem;">Proyección M1-3</div>
+        <div style="margin-top:1.5rem;display:flex;gap:1.5rem;">
+          <div>
+            <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">MRR</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--mint);">S/ 5,990</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">Instituciones</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;">${totalInst}</div>
+          </div>
+          <div>
+            <div style="font-size:0.7rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;">EBITDA</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--error);">-S/27,573</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Proyección 24 meses</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M1-3</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 8,608</span>
+            <span style="font-size:0.75rem;font-weight:700;color:var(--error);">Inversión</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M10-12</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 98,532</span>
+            <span style="font-size:0.75rem;font-weight:700;color:var(--mint);">✓ EBITDA+</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
+            <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">M22-24</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">S/ 245,014</span>
+            <span style="font-size:0.75rem;font-weight:700;color:var(--mint);">✓ EBITDA+</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.25rem;">Unit Economics</div>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">LTV Neto</span>
+          <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">S/ 39,034</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Payback</span>
+          <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">1.04 meses</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
+          <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Churn mensual</span>
+          <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--mint);">3%</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+// =============================================
+// UTILIDADES
+// =============================================
+function escHtml(str) {
+  if (!str) return '—';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'alert-toast show' + (isError ? ' error' : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = 'alert-toast'; }, 4000);
+}
+
+function logout() {
+  localStorage.clear();
+  window.location.href = 'login.html';
+}
 
 // =============================================
 // INIT
 // =============================================
 renderOrdersTable(allOrders);
-obtenerNuevasInstituciones();
 updateStats();
+// Carga instituciones al inicio para que el contador ya aparezca
+cargarInstituciones().then(() => updateStats());
 </script>
 </body>
 </html>
